@@ -27,5 +27,6 @@ Install requirements
 ### Step 3
 ---------
 Run flask
-`cd /Project/flask_app`
-`python app.py`
+
+    cd /Project/flask_app
+    python app.py
