@@ -1,16 +1,6 @@
-from flask import Flask, Blueprint
-from flask_restful import Api
-from flask_jwt_extended import JWTManager
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
+from flask import Flask
 from config import DevelopmentConfig
-
-
-db = SQLAlchemy()
-jwt = JWTManager()
-bcrypt = Bcrypt()
-api_bp = Blueprint('api', __name__)
-api = Api(api_bp)
+from extensions import db, jwt, bcrypt, api, api_bp, cors
 
 
 def create_app(config=None):
@@ -21,6 +11,7 @@ def create_app(config=None):
         jwt.init_app(app)
         db.init_app(app)
         bcrypt.init_app(app)
+        cors.init_app(app)
 
     from model import temp_blacklist
     @jwt.token_in_blacklist_loader
