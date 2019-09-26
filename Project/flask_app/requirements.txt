@@ -7,6 +7,7 @@ entrypoints==0.3
 flake8==3.7.8
 Flask==1.1.1
 Flask-Bcrypt==0.7.1
+Flask-Cors==3.0.8
 Flask-JWT-Extended==3.23.0
 Flask-RESTful==0.3.7
 Flask-SQLAlchemy==2.4.0

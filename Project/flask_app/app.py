@@ -1,10 +1,13 @@
-from flask import Flask
+import os
+from flask import Flask, send_from_directory, Blueprint
 from config import DevelopmentConfig
-from extensions import db, jwt, bcrypt, api, api_bp, cors
+from extensions import db, jwt, bcrypt, api, cors
 
 
 def create_app(config=None):
-    app = Flask(__name__)
+    app = Flask(__name__,
+                template_folder='../react_app/build',
+                static_folder='../react_app/build/static')
     app.config.from_object(config)
 
     with app.app_context():
@@ -18,6 +21,15 @@ def create_app(config=None):
     def check_if_token_in_blacklist(decrypted_token):
         return decrypted_token['jti'] in temp_blacklist
 
+    # Let react handle routing
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve(path):
+        if path and os.path.exists(app.template_folder + '/' + path):
+            return send_from_directory(app.template_folder, path)
+        else:
+            return send_from_directory(app.template_folder, 'index.html')
+
     from resources.authentication import (UserRegistration, UserLogin,
                                           TokenRefresh, RevokeAccessToken,
                                           GetUserInfo, RevokeRefreshToken)
@@ -29,6 +41,8 @@ def create_app(config=None):
     api.add_resource(RevokeRefreshToken, '/revoke/refresh')
     api.add_resource(GetUserInfo, '/user')
 
+    api_bp = Blueprint('api', __name__)
+    api.init_app(api_bp)
     app.register_blueprint(api_bp, url_prefix='/api')
     return app
 
