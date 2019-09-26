@@ -14,6 +14,13 @@ Install virtualenv (virtual environment)
 
 `pip install virtualenv`
 
+Create environment
+
+```
+cd /Project/flask_app
+virtualenv venv
+```
+
 Follow [this](https://virtualenv.pypa.io/en/stable/userguide/) guide to activate the environment for your particular system
 
 ### Step 2
@@ -23,7 +30,7 @@ Follow [this](https://virtualenv.pypa.io/en/stable/userguide/) guide to activate
 Install requirements
 
 	cd /Project/flask_app
-	pip install requirements.txt
+	pip install -r requirements.txt
 
 ### Step 3
 
