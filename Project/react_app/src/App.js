@@ -7,9 +7,9 @@ import Register from './components/Register'
 import Profile from './components/Profile'
 
 class App extends Component {
-
-    return (
-    //  <Router>
+    render() {
+          return (
+      <Router>
         <div className="App">
           <Navbar />
           <Route exact path="/" component={Landing} />
@@ -19,8 +19,11 @@ class App extends Component {
             <Route exact path="/profile" component={Profile} />
           </div>
         </div>
-    //  </Router>
+      </Router>
     )
+    }
+
+
 }
 
 export default App
