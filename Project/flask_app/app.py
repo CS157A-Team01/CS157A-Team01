@@ -32,7 +32,8 @@ def create_app(config=None):
 
     from resources.authentication import (UserRegistration, UserLogin,
                                           TokenRefresh, RevokeAccessToken,
-                                          GetUserInfo, RevokeRefreshToken)
+                                          RevokeRefreshToken)
+    from resources.user import GetUserInfo
 
     api.add_resource(UserRegistration, '/register')
     api.add_resource(UserLogin, '/login')

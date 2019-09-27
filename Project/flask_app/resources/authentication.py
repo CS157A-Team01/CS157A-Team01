@@ -1,9 +1,9 @@
+import re
 from flask_restful import Resource, reqparse
-from model import User, db, temp_blacklist
+from model import User, temp_blacklist
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import or_
-import re
-from app import bcrypt
+from extensions import bcrypt, db
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, jwt_refresh_token_required,
                                 jwt_required, get_raw_jwt)
@@ -124,14 +124,6 @@ class TokenRefresh(Resource):
         return {
             'access_token': create_access_token(identity=current_user)
         }
-
-
-class GetUserInfo(Resource):
-    @jwt_required
-    def get(self):
-        current_user = get_jwt_identity()
-        user = User.query.filter_by(id=current_user).first()
-        return {'username': user.username, 'email': user.email}
 
 
 class RevokeAccessToken(Resource):
