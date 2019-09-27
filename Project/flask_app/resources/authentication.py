@@ -99,22 +99,22 @@ class UserLogin(Resource):
         except OperationalError:
             return {'message': 'something went wrong'}, 500
 
-        if user:
-            if bcrypt.check_password_hash(user.password.decode('utf-8'),
-                                          args['password']):
-
-                access_token = create_access_token(identity=user.id)
-                refresh_token = create_refresh_token(identity=user.id)
-                return {'message': f'username {user.username} '
-                        'logged in sucessfully',
-                        'access_token': access_token,
-                        'refresh_token': refresh_token}
-            else:
-                return ({'message': 'incorrect username/password combination'},
-                        409)
-        else:
+        if not user:
             return ({'message': 'incorrect username/password combination'},
                     409)
+
+        if bcrypt.check_password_hash(user.password.decode('utf-8'),
+                                      args['password']):
+
+            access_token = create_access_token(identity=user.id)
+            refresh_token = create_refresh_token(identity=user.id)
+            return {'message': f'username {user.username} '
+                    'logged in successfully',
+                    'access_token': access_token,
+                    'refresh_token': refresh_token}
+
+        return ({'message': 'incorrect username/password combination'},
+                409)
 
 
 class TokenRefresh(Resource):
