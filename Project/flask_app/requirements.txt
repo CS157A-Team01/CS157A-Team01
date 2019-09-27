@@ -15,11 +15,12 @@ itsdangerous==1.1.0
 Jinja2==2.10.1
 MarkupSafe==1.1.1
 mccabe==0.6.1
-mysqlclient==1.4.4
+protobuf==3.9.2
 pycodestyle==2.5.0
 pycparser==2.19
 pyflakes==2.1.1
 PyJWT==1.7.1
+PyMySQL==0.9.3
 pytz==2019.2
 rope==0.14.0
 six==1.12.0

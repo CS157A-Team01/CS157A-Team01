@@ -15,7 +15,7 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     SECRET_KEY = 'dev-secret'
     JWT_SECRET_KEY = 'jwt-dev-secret'
-    SQLALCHEMY_DATABASE_URI = 'mysql://admin:7Vn2LsWHk3U8ycvVqzPE@' \
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:7Vn2LsWHk3U8ycvVqzPE@' \
                               'ec2-18-189-201-159.us-east-2.compute' \
                               '.amazonaws.com:3306/mock'
 
