@@ -5,11 +5,10 @@ class Register extends Component {
   constructor() {
     super()
     this.state = {
-      first_name: '',
-      last_name: '',
-      email: '',
-      password: '',
-      errors: {}
+        username: '',
+        email: '',
+        password: '',
+        errors: {}
     }
 
     this.onChange = this.onChange.bind(this)
@@ -23,8 +22,7 @@ class Register extends Component {
     e.preventDefault()
 
     const newUser = {
-      first_name: this.state.first_name,
-      last_name: this.state.last_name,
+      username: this.state.username,
       email: this.state.email,
       password: this.state.password
     }

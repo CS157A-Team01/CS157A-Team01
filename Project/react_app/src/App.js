@@ -6,8 +6,7 @@ import Login from './components/Login'
 import Register from './components/Register'
 import Profile from './components/Profile'
 
-class App extends Component {
-    render() {
+function App() {
           return (
       <Router>
         <div className="App">
@@ -21,8 +20,6 @@ class App extends Component {
         </div>
       </Router>
     )
-    }
-
 
 }
 
