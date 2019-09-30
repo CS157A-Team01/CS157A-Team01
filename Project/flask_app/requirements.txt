@@ -7,6 +7,7 @@ entrypoints==0.3
 flake8==3.7.8
 Flask==1.1.1
 Flask-Bcrypt==0.7.1
+Flask-Cors==3.0.8
 Flask-JWT-Extended==3.23.0
 Flask-RESTful==0.3.7
 Flask-SQLAlchemy==2.4.0
@@ -14,11 +15,12 @@ itsdangerous==1.1.0
 Jinja2==2.10.1
 MarkupSafe==1.1.1
 mccabe==0.6.1
-mysqlclient==1.4.4
+protobuf==3.9.2
 pycodestyle==2.5.0
 pycparser==2.19
 pyflakes==2.1.1
 PyJWT==1.7.1
+PyMySQL==0.9.3
 pytz==2019.2
 rope==0.14.0
 six==1.12.0
