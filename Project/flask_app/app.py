@@ -1,7 +1,7 @@
 import os
 from flask import Flask, send_from_directory, Blueprint
 from config import DevelopmentConfig
-from extensions import db, jwt, bcrypt, api, cors
+from extensions import db, jwt, bcrypt, api, cors, mysql
 
 
 def create_app(config=None):
@@ -15,6 +15,7 @@ def create_app(config=None):
         db.init_app(app)
         bcrypt.init_app(app)
         cors.init_app(app)
+        mysql.init_app(app)
 
     from model import temp_blacklist
     @jwt.token_in_blacklist_loader
