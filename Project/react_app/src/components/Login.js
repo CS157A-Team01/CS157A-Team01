@@ -5,7 +5,7 @@ class Login extends Component {
   constructor() {
     super()
     this.state = {
-      email: '',
+      userid: '',
       password: '',
       errors: {}
     }
@@ -21,15 +21,16 @@ class Login extends Component {
     e.preventDefault()
 
     const user = {
-      email: this.state.email,
+      userid: this.state.userid,
       password: this.state.password
     }
 
-    login(user).then(res => {
-      if (!res.error) {
-        this.props.history.push(`/profile`)
-      }
-    })
+   login(user).then(res => {
+    //  if (!res.error) {
+    //    this.props.history.push(`http://localhost:5000/api/profile`)
+    //  }
+          console.log()
+     })
   }
 
   render() {
@@ -40,13 +41,13 @@ class Login extends Component {
             <form noValidate onSubmit={this.onSubmit}>
               <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
               <div className="form-group">
-                <label htmlFor="email">Email address/User Name</label>
+                <label htmlFor="userid">Email address/User Name</label>
                 <input
-                  type="email"
+                  type="userid"
                   className="form-control"
-                  name="email"
+                  name="userid"
                   placeholder="Enter email or username"
-                  value={this.state.email}
+                  value={this.state.userid}
                   onChange={this.onChange}
                 />
               </div>

@@ -2,9 +2,8 @@ import axios from 'axios'
 
 export const register = newUser => {
   return axios
-    .post('api/register', {
-      first_name: newUser.first_name,
-      last_name: newUser.last_name,
+    .post('http://localhost:5000/api/register', {
+      username: newUser.username,
       email: newUser.email,
       password: newUser.password
     })
@@ -15,8 +14,8 @@ export const register = newUser => {
 
 export const login = user => {
   return axios
-    .post('api/login', {
-      email: user.email,
+    .post('http://localhost:5000/api/login', {
+      userid: user.userid,
       password: user.password
     })
     .then(response => {
@@ -24,14 +23,16 @@ export const login = user => {
       return response.data
     })
     .catch(err => {
-      console.log(err)
+      console.log(err.response)
+        console.log(user.password)
+        console.log(user.userid)
     })
 }
 
 export const getProfile = user => {
   return axios
     .get('api/profile', {
-      headers: { Authorization: `Bearer ${this.getToken()}` }
+      //headers: { Authorization: `Bearer ${this.getToken()}` }
     })
     .then(response => {
       console.log(response)
