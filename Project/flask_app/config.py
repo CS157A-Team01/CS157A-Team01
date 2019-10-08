@@ -19,6 +19,12 @@ class DevelopmentConfig(BaseConfig):
                               'ec2-18-189-201-159.us-east-2.compute' \
                               '.amazonaws.com:3306/mock?charset=utf8mb4'
 
+    MYSQL_DATABASE_HOST = 'ec2-18-189-201-159.us-east-2.compute' \
+                          '.amazonaws.com'
+    MYSQL_DATABASE_USER = 'admin'
+    MYSQL_DATABASE_PASSWORD = '7Vn2LsWHk3U8ycvVqzPE'
+    MYSQL_DATABASE_DB = 'mock'
+
 
 class ProductionConfig(BaseConfig):
     __secret = 'fUjXn2r5u8x/A?D(G+KaPdSgVkYp3s6v'

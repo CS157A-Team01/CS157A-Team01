@@ -1,13 +1,11 @@
 import re
 from flask_restful import Resource, reqparse
-from model import User, temp_blacklist
+from model import temp_blacklist
 from sqlalchemy.exc import OperationalError
-from sqlalchemy import or_
-from extensions import bcrypt, db
+from extensions import bcrypt, mysql
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, jwt_refresh_token_required,
                                 jwt_required, get_raw_jwt)
-
 
 register_parser = reqparse.RequestParser()
 register_parser.add_argument(
@@ -60,30 +58,46 @@ class UserRegistration(Resource):
         failed = validate_registration(args)
         if failed:
             return {'message': failed}, 422
+        cursor = mysql.get_db().cursor()
         try:
-            username = User.query.filter_by(username=args['username']).first()
-            email = User.query.filter_by(email=args['email']).first()
+            cursor.execute(
+                "SELECT * FROM user WHERE username LIKE %s",
+                (args['username'], ))
+            username = cursor.fetchone()
+
+            sql = "SELECT * FROM email WHERE address LIKE %s"
+            cursor.execute(sql, (args['email']))
+            email = cursor.fetchone()
         except OperationalError:
             return {'message': 'something went wrong'}, 500
 
         if username or email:
             return {'message': f'{"username " if username else "email "}'
-                    'already exist'}, 409
+                               'already exist'}, 409
 
         pwd_hash = bcrypt.generate_password_hash(
             args['password'].encode('utf-8'))
-        user = User(username=args['username'],
-                    email=args['email'],
-                    password=pwd_hash)
+
         try:
-            db.session.add(user)
-            db.session.commit()
+            cursor.execute("INSERT INTO user (username, password)"
+                           "VALUES (%s, %s)",
+                           (args['username'], pwd_hash))
+            new_user_id = cursor.lastrowid
+            sql = f"INSERT INTO email (address, user_id) " \
+                  f"VALUES (%s,{new_user_id})"
+            cursor.execute(sql, args['email'])
+            email_id = cursor.lastrowid
+
+            sql = 'UPDATE user SET primary_email_id = %s WHERE id = %s'
+            cursor.execute(sql, (email_id, new_user_id))
+
+            mysql.get_db().commit()
         except OperationalError:
             return {'message': 'something went wrong'}, 500
 
-        return {'message': f'user {user.username} registered',
-                'username': user.username,
-                'email': user.email}
+        return {'message': f'user {args["username"]} registered',
+                'username': args["username"],
+                'email': args["email"]}
 
 
 class UserLogin(Resource):
@@ -91,28 +105,39 @@ class UserLogin(Resource):
         args = login_parser.parse_args()
         if len(args['userid']) > 100:
             return {'message': 'username or email should be '
-                    'less than 100 characters'}
+                               'less than 100 characters'}
+        cursor = mysql.get_db().cursor()
         try:
-            user = User.query.filter(
-                or_(User.email == args['userid'],
-                    User.username == args['userid'])).first()
+            sql = "SELECT * FROM user WHERE username LIKE %s"
+            cursor.execute(sql, (args['userid'],))
+            user = cursor.fetchone()
+
+            sql = "SELECT * FROM email WHERE address like %s"
+            cursor.execute(sql, (args['userid'],))
+            email = cursor.fetchone()
+
         except OperationalError:
             return {'message': 'something went wrong'}, 500
 
-        if not user:
+        if not user and not email:
             return ({'message': 'incorrect username/password combination'},
                     409)
+        if user:
+            user_id, username, password, primary_email_id = user
+        else:
+            email_id, address, user_id = email
+            sql = "SELECT * FROM user WHERE id = %s"
+            cursor.execute(sql, (user_id,))
+            _, username, password, primary_email_id = cursor.fetchone()
 
-        if bcrypt.check_password_hash(user.password.decode('utf-8'),
+        if bcrypt.check_password_hash(password.decode('utf-8'),
                                       args['password']):
-
-            access_token = create_access_token(identity=user.id)
-            refresh_token = create_refresh_token(identity=user.id)
-            return {'message': f'username {user.username} '
-                    'logged in successfully',
+            access_token = create_access_token(identity=user_id)
+            refresh_token = create_refresh_token(identity=user_id)
+            return {'message': f'username {username} '
+                               'logged in successfully',
                     'access_token': access_token,
                     'refresh_token': refresh_token}
-
         return ({'message': 'incorrect username/password combination'},
                 409)
 
