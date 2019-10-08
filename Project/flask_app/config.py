@@ -15,7 +15,15 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     SECRET_KEY = 'dev-secret'
     JWT_SECRET_KEY = 'jwt-dev-secret'
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:root@localhost:3306/mock'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:7Vn2LsWHk3U8ycvVqzPE@' \
+                              'ec2-18-189-201-159.us-east-2.compute' \
+                              '.amazonaws.com:3306/mock?charset=utf8mb4'
+
+    MYSQL_DATABASE_HOST = 'ec2-18-189-201-159.us-east-2.compute' \
+                          '.amazonaws.com'
+    MYSQL_DATABASE_USER = 'admin'
+    MYSQL_DATABASE_PASSWORD = '7Vn2LsWHk3U8ycvVqzPE'
+    MYSQL_DATABASE_DB = 'mock'
 
 
 class ProductionConfig(BaseConfig):
