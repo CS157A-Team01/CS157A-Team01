@@ -45,7 +45,7 @@ class Login extends Component {
                   type="email"
                   className="form-control"
                   name="email"
-                  placeholder="Enter email"
+                  placeholder="Enter email or username"
                   value={this.state.email}
                   onChange={this.onChange}
                 />
