@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
-
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Button from 'react-bootstrap/Button'
 class Landing extends Component {
   logOut(e) {
     e.preventDefault()
@@ -40,33 +44,33 @@ class Landing extends Component {
     )
 
     return (
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark rounded">
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarsExample10"
-          aria-controls="navbarsExample10"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
-
-        <div
-          className="collapse navbar-collapse justify-content-md-center"
-          id="navbarsExample10"
-        >
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link to="/" className="nav-link">
-                Home
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+  <Navbar.Brand>
+  <Link to="/" className="nav-link">
+  BeatMeLOGO
               </Link>
-            </li>
-          </ul>
-          {localStorage.usertoken ? userLink : loginRegLink}
-        </div>
-      </nav>
+    
+    
+    </Navbar.Brand>
+  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+  <Navbar.Collapse id="responsive-navbar-nav">
+    <Nav className="mx-auto">
+    <InputGroup style={{width:"50vw"}}>
+    <FormControl
+      placeholder="Enter your production"
+      aria-label="Production"
+      aria-describedby="basic-addon2"
+    />
+    <InputGroup.Append>
+      <Button variant="outline-secondary" ><i class="fas fa-search-dollar" style={{color:"white"}}></i></Button>
+    </InputGroup.Append>
+  </InputGroup>
+    </Nav>
+    <Nav>
+      <Nav.Link>{localStorage.usertoken ? userLink : loginRegLink}</Nav.Link>
+    </Nav>
+  </Navbar.Collapse>
+</Navbar>
     )
   }
 }
