@@ -3,9 +3,10 @@ import pymysql
 from extensions import bcrypt
 
 
-def read_sql(file='test.sql'):
+def read_sql(file, top_command):
     with open(file, 'r', encoding='utf-8') as infile:
         content = infile.read()
+    content = top_command + content
     commands = content.replace('\n', '').split(';')[:-1]
     return commands
 
@@ -24,7 +25,12 @@ def get_db_connection():
 
 
 def init_test_db(cursor):
-    commands = read_sql('test_db_setup.sql')
+    init_sql = f'''
+    DROP DATABASE IF EXISTS {TestConfig.MYSQL_DATABASE_DB};
+    CREATE DATABASE {TestConfig.MYSQL_DATABASE_DB}; 
+    USE {TestConfig.MYSQL_DATABASE_DB};
+    '''
+    commands = read_sql('../scripts/db_setup.sql', init_sql)
     for command in commands:
         cursor.execute(command)
 
@@ -41,4 +47,3 @@ def init_test_db(cursor):
           'VALUES (%s, %s)'
     cursor.execute(sql, (new_user_id, new_email_id))
     return new_user_id
-

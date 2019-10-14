@@ -56,6 +56,32 @@ class UserTestCase(BaseTestCase):
         self.assertTrue(response.json)
         self.assertEqual(response.status_code, 409)
 
+    def test_user_registration_username_too_long(self):
+        username = ''
+        for _ in range(150):
+            username += 'x'
+        data_dict = {
+            'username': username,
+            'email': 'existing@mail.com',
+            'password': 'unittest'
+        }
+        response = self.client.post('/api/register', data=data_dict)
+        self.assertTrue(response.json)
+        self.assertEqual(response.status_code, 422)
+
+    def test_user_registration_email_too_long(self):
+        email = ''
+        for _ in range(150):
+            email += 'x'
+        data_dict = {
+            'username': 'unittester',
+            'email': email,
+            'password': 'unittest'
+        }
+        response = self.client.post('/api/register', data=data_dict)
+        self.assertTrue(response.json)
+        self.assertEqual(response.status_code, 422)
+
     def test_user_login_success(self):
         data_dict = {
             'userid': 'existing',

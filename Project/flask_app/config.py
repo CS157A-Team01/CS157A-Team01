@@ -23,7 +23,7 @@ class DevelopmentConfig(BaseConfig):
                           '.amazonaws.com'
     MYSQL_DATABASE_USER = 'admin'
     MYSQL_DATABASE_PASSWORD = '7Vn2LsWHk3U8ycvVqzPE'
-    MYSQL_DATABASE_DB = 'mock'
+    MYSQL_DATABASE_DB = 'dev'
 
 
 class TestConfig(DevelopmentConfig):

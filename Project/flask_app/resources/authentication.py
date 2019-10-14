@@ -54,9 +54,9 @@ def validate_email(args):
 class UserRegistration(Resource):
     def post(self):
         args = register_parser.parse_args()
-        failed = validate_registration(args)
-        if failed:
-            return {'message': failed}, 422
+        failed_msg = validate_registration(args)
+        if failed_msg:
+            return {'message': failed_msg}, 422
         cursor = mysql.get_db().cursor()
 
         cursor.execute(
