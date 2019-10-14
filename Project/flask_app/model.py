@@ -4,20 +4,12 @@ from sqlalchemy.ext.associationproxy import association_proxy
 
 temp_blacklist = set()
 
-# primary_email_assoc = db.Table(
-#     'primary_email',
-#     db.Column('user_id', db.Integer, db.ForeignKey('user.id'),
-#               primary_key=True, unique=True),
-#     db.Column('email_id', db.Integer, db.ForeignKey('email.id'),
-#               primary_key=True, unique=True),
-# )
-
 
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128), unique=True)
-    password = db.Column(db.Binary(128), nullable=False)
+    password = db.Column(db.LargeBinary(128), nullable=False)
     primary_email_id = db.Column(
         db.Integer, db.ForeignKey('email.id', name='fk_primary_email'),
         nullable=True)

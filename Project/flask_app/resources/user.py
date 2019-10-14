@@ -9,15 +9,17 @@ class GetUserInfo(Resource):
         current_user = get_jwt_identity()
         cursor = mysql.get_db().cursor()
 
-        sql = f"SELECT * FROM user WHERE id = {int(current_user)}"
-        cursor.execute(sql)
-        _, username, password, primary_email_id = cursor.fetchone()
+        sql = '''
+        SELECT username, password, address FROM email 
+        JOIN user_primary_email
+        ON email.user_id = user_primary_email.user_id
+        JOIN user 
+        ON email.user_id = user.id
+        WHERE user.id = %s
+        '''
+        cursor.execute(sql, (current_user,))
+        username, password, address = cursor.fetchone()
 
-        sql = "SELECT * FROM email WHERE id = %s"
-        cursor.execute(sql, (primary_email_id,))
-        try:
-            _, address, _ = cursor.fetchone()
-        except TypeError:
-            address = 'No primary email, fix this'
-
-        return {'username': username, 'primary email': address}
+        return {'username': username,
+                'primary email': address,
+                'hashed password': password.decode('utf-8')}

@@ -36,15 +36,15 @@ Install requirements
 
 ---
 
-Make sure a MySQL instance is running on the machine on port 3306 with username `root` and password `root`
+~~Make sure a MySQL instance is running on the machine on port 3306 with username `root` and password `root`~~
 
-create a database called `mock` using `create database mock`
+~~create a database called `mock` using `create database mock`~~
 
-*(NOT RECOMMENDED) you could alternatively change line 18 of config.py to match your specific setup*
+~~*(NOT RECOMMENDED) you could alternatively change line 18 of config.py to match your specific setup*~~
 
-create necessary tables:
+~~create necessary tables:~~
 
-`python create_table.py `
+~~`python create_table.py `~~
 
 
 ### Step 4

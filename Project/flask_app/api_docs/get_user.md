@@ -14,12 +14,12 @@ Get the details of the currently Authenticated User's username and email
 
 **Content examples**
 
-For a User with ID 1234 on the local database where that User has saved an
-email address and name information.
+For a User with username demo on the local database where that User has saved an
+email address as primary email.
 
 ```json
 {
     "username": "demo",
-    "email": "demo@mail.com"
+    "primary email": "demo@mail.com"
 }
 ```

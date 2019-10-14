@@ -26,6 +26,12 @@ class DevelopmentConfig(BaseConfig):
     MYSQL_DATABASE_DB = 'mock'
 
 
+class TestConfig(DevelopmentConfig):
+    DEBUG = False
+    TESTING = True
+    MYSQL_DATABASE_DB = 'unit_test'
+
+
 class ProductionConfig(BaseConfig):
-    __secret = 'fUjXn2r5u8x/A?D(G+KaPdSgVkYp3s6v'
-    SECRET_KEY = os.environ.get('SECRET_KEY', __secret)
+    SECRET_KEY = os.environ.get('SECRET_KEY', None)
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', None)

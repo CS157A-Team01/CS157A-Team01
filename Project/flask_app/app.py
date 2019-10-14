@@ -1,7 +1,7 @@
 import os
 from flask import Flask, send_from_directory, Blueprint
 from config import DevelopmentConfig
-from extensions import db, jwt, bcrypt, api, cors, mysql
+from extensions import jwt, bcrypt, api, cors, mysql
 
 
 def create_app(config=None):
@@ -12,7 +12,6 @@ def create_app(config=None):
 
     with app.app_context():
         jwt.init_app(app)
-        db.init_app(app)
         bcrypt.init_app(app)
         cors.init_app(app)
         mysql.init_app(app)
