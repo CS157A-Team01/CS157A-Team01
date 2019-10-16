@@ -29,7 +29,7 @@ class Login extends Component {
     //  if (!res.error) {
     //    this.props.history.push(`http://localhost:5000/api/profile`)
     //  }
-          console.log()
+          console.log("Success!")
      })
   }
 

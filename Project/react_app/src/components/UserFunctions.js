@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const register = newUser => {
   return axios
-    .post('http://localhost:5000/api/register', {
+    .post('api/register', {
       username: newUser.username,
       email: newUser.email,
       password: newUser.password
@@ -10,11 +10,14 @@ export const register = newUser => {
     .then(response => {
       console.log('Registered')
     })
+      .catch(err => {
+          console.log(err)
+      })
 }
 
 export const login = user => {
   return axios
-    .post('http://localhost:5000/api/login', {
+    .post('/api/login', {
       userid: user.userid,
       password: user.password
     })
@@ -31,7 +34,7 @@ export const login = user => {
 
 export const getProfile = user => {
   return axios
-    .get('api/profile', {
+    .get('/api/profile', {
       //headers: { Authorization: `Bearer ${this.getToken()}` }
     })
     .then(response => {
