@@ -1,25 +1,24 @@
 import React, { Component } from 'react'
 import jwt_decode from 'jwt-decode'
+import {getProfile} from "./UserFunctions";
 
 class Profile extends Component {
   constructor() {
     super()
     this.state = {
-      first_name: '',
-      last_name: '',
-      email: '',
-      errors: {}
+      username: '',
+      password: '',
+      primary_email: ''
     }
   }
 
   componentDidMount() {
-    const token = localStorage.usertoken
-    const decoded = jwt_decode(token)
-    this.setState({
-      first_name: decoded.identity.first_name,
-      last_name: decoded.identity.last_name,
-      email: decoded.identity.email
-    })
+    getProfile().then(data => this.setState({
+      username: data.username,
+      password: data['hashed password'],
+      primary_email: data['primary email']
+    }))
+
   }
 
   render() {
@@ -32,16 +31,16 @@ class Profile extends Component {
           <table className="table col-md-6 mx-auto">
             <tbody>
               <tr>
-                <td>Fist Name</td>
-                <td>{this.state.first_name}</td>
+                <td>Username</td>
+                <td>{this.state.username}</td>
               </tr>
               <tr>
-                <td>Last Name</td>
-                <td>{this.state.last_name}</td>
+                <td>Hashed password</td>
+                <td>{this.state.password}</td>
               </tr>
               <tr>
                 <td>Email</td>
-                <td>{this.state.email}</td>
+                <td>{this.state.primary_email}</td>
               </tr>
             </tbody>
           </table>

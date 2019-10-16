@@ -22,7 +22,7 @@ export const login = user => {
       password: user.password
     })
     .then(response => {
-      localStorage.setItem('usertoken', response.data)
+      localStorage.setItem('usertoken', response.data.access_token)
       return response.data
     })
     .catch(err => {
@@ -32,16 +32,15 @@ export const login = user => {
     })
 }
 
-export const getProfile = user => {
+export const getProfile = () => {
   return axios
-    .get('/api/profile', {
-      //headers: { Authorization: `Bearer ${this.getToken()}` }
+    .get('/api/user', {
+      headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` }
     })
     .then(response => {
-      console.log(response)
       return response.data
     })
     .catch(err => {
-      console.log(err)
+      console.log(err.response.data)
     })
 }

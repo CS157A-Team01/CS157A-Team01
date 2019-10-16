@@ -26,10 +26,10 @@ class Login extends Component {
     }
 
    login(user).then(res => {
-    //  if (!res.error) {
-    //    this.props.history.push(`http://localhost:5000/api/profile`)
-    //  }
-          console.log("Success!")
+      if (!res.error) {
+        this.props.history.push(`api/profile`)
+      }
+     //     console.log("Success!")
      })
   }
 
