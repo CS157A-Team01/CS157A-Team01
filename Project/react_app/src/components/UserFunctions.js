@@ -17,7 +17,7 @@ export const register = newUser => {
 
 export const login = user => {
   return axios
-    .post('/api/login', {
+    .post('api/login', {
       userid: user.userid,
       password: user.password
     })
@@ -34,7 +34,7 @@ export const login = user => {
 
 export const getProfile = () => {
   return axios
-    .get('/api/user', {
+    .get('api/user', {
       headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` }
     })
     .then(response => {
