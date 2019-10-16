@@ -5,10 +5,10 @@ class Register extends Component {
   constructor() {
     super()
     this.state = {
-        username: '',
-        email: '',
-        password: '',
-        errors: {}
+      username: '',
+      email: '',
+      password: '',
+      errors: {}
     }
 
     this.onChange = this.onChange.bind(this)

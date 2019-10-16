@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {getProfile} from "./UserFunctions";
+import { getProfile } from "./UserFunctions";
 
 class Profile extends Component {
   constructor() {
@@ -34,7 +34,7 @@ class Profile extends Component {
                 <td>{this.state.username}</td>
               </tr>
               <tr>
-                <td>Hashed password</td>
+                <td>Hashed password (demo purpose)</td>
                 <td>{this.state.password}</td>
               </tr>
               <tr>
