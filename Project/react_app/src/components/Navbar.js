@@ -45,32 +45,32 @@ class Landing extends Component {
 
     return (
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-  <Navbar.Brand>
-  <Link to="/" className="nav-link">
-  BeatMeLOGO
+        <Navbar.Brand>
+          <Link to="/" className="nav-link">
+            BeatMeLOGO
               </Link>
-    
-    
-    </Navbar.Brand>
-  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-  <Navbar.Collapse id="responsive-navbar-nav">
-    <Nav className="mx-auto">
-    <InputGroup style={{width:"50vw"}}>
-    <FormControl
-      placeholder="Enter your production"
-      aria-label="Production"
-      aria-describedby="basic-addon2"
-    />
-    <InputGroup.Append>
-      <Button variant="outline-secondary" ><i class="fas fa-search-dollar" style={{color:"white"}}></i></Button>
-    </InputGroup.Append>
-  </InputGroup>
-    </Nav>
-    <Nav>
-      <Nav.Link>{localStorage.usertoken ? userLink : loginRegLink}</Nav.Link>
-    </Nav>
-  </Navbar.Collapse>
-</Navbar>
+
+
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="mx-auto">
+            <InputGroup style={{ width: "50vw" }}>
+              <FormControl
+                placeholder="Enter your production"
+                aria-label="Production"
+                aria-describedby="basic-addon2"
+              />
+              <InputGroup.Append>
+                <Button variant="outline-secondary" ><i className="fas fa-search-dollar" style={{ color: "white" }}></i></Button>
+              </InputGroup.Append>
+            </InputGroup>
+          </Nav>
+          <Nav>
+            <Nav.Link>{localStorage.usertoken ? userLink : loginRegLink}</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     )
   }
 }

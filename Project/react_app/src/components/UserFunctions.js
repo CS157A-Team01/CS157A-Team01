@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const register = newUser => {
   return axios
-    .post('api/register', {
+    .post('/api/register', {
       username: newUser.username,
       email: newUser.email,
       password: newUser.password
@@ -10,9 +10,9 @@ export const register = newUser => {
     .then(response => {
       console.log('Registered')
     })
-      .catch(err => {
-          console.log(err)
-      })
+    .catch(err => {
+      console.log(err)
+    })
 }
 
 export const login = user => {
@@ -22,13 +22,10 @@ export const login = user => {
       password: user.password
     })
     .then(response => {
-      localStorage.setItem('usertoken', response.data.access_token)
-      return response.data
-    })
-    .catch(err => {
-      console.log(err.response)
-        console.log(user.password)
-        console.log(user.userid)
+      if (response.status === 200) {
+        localStorage.setItem('usertoken', response.data.access_token)
+        return response.data
+      }
     })
 }
 

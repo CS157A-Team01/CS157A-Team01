@@ -25,15 +25,14 @@ class Login extends Component {
       password: this.state.password
     }
 
-   login(user).then(res => {
-      if (!res.error) {
-        this.props.history.push(`api/profile`)
-      }
-     //     console.log("Success!")
-     })
+    login(user).then(res => {
+      this.props.history.push(`/profile`)
+    }).catch(err => {
+      console.error(err.response)
+    })
   }
 
-  
+
   render() {
     return (
       <div className="container">
