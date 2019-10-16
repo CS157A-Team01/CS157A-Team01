@@ -20,6 +20,7 @@ email address as primary email.
 ```json
 {
     "username": "demo",
-    "primary email": "demo@mail.com"
+    "primary_email": "demo@mail.com",
+    "hashed_password": "[hashed password for demo purpose]"
 }
 ```

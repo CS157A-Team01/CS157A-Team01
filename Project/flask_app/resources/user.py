@@ -21,5 +21,5 @@ class GetUserInfo(Resource):
         username, password, address = cursor.fetchone()
 
         return {'username': username,
-                'primary email': address,
-                'hashed password': password.decode('utf-8')}
+                'primary_email': address,
+                'hashed_password': password.decode('utf-8')}

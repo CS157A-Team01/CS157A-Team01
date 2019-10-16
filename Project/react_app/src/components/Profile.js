@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import jwt_decode from 'jwt-decode'
 import {getProfile} from "./UserFunctions";
 
 class Profile extends Component {
@@ -15,8 +14,8 @@ class Profile extends Component {
   componentDidMount() {
     getProfile().then(data => this.setState({
       username: data.username,
-      password: data['hashed password'],
-      primary_email: data['primary email']
+      password: data.hashed_password,
+      primary_email: data.primary_email
     }))
 
   }
@@ -39,7 +38,7 @@ class Profile extends Component {
                 <td>{this.state.password}</td>
               </tr>
               <tr>
-                <td>Email</td>
+                <td>Primary Email</td>
                 <td>{this.state.primary_email}</td>
               </tr>
             </tbody>
