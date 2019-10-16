@@ -25,11 +25,20 @@ class DevelopmentConfig(BaseConfig):
     MYSQL_DATABASE_PASSWORD = '7Vn2LsWHk3U8ycvVqzPE'
     MYSQL_DATABASE_DB = 'dev'
 
+    MAIL_SERVER = 'smtp.mailgun.org'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = 'postmaster@sandboxe729eb98e30c4b77949fa6d8c9e2d197' \
+                    '.mailgun.org'
+    MAIL_PASSWORD = '8e2f21eba23d9f1e1edea8f3cb3a618a-9c988ee3-263cdc26'
+    DEFAULT_MAIL_SENDER = 'anon.software.dev@gmail.com'
+
 
 class TestConfig(DevelopmentConfig):
     DEBUG = False
     TESTING = True
     MYSQL_DATABASE_DB = 'unit_test'
+    MAIL_SUPPRESS_SEND = True
 
 
 class ProductionConfig(BaseConfig):

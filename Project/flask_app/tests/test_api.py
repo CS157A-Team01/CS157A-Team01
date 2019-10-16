@@ -1,7 +1,7 @@
 import unittest
 from app import create_app
 from config import TestConfig
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, create_refresh_token
 from tests.utils import get_db_connection, init_test_db
 
 test_app = create_app(TestConfig)
@@ -16,6 +16,7 @@ class BaseTestCase(unittest.TestCase):
         user_id = init_test_db(self.cursor)
         with test_app.app_context():
             self.existing_token = create_access_token(identity=user_id)
+            self.refresh_token = create_refresh_token(identity=user_id)
         self.connection.commit()
 
     def tearDown(self):
@@ -122,7 +123,33 @@ class UserTestCase(BaseTestCase):
         self.assertTrue(response.json)
         self.assertEqual(response.status_code, 200)
 
+    def test_access_token_refresh(self):
+        header_dict = {
+            'Authorization': f'Bearer {self.refresh_token}'
+        }
+        response = self.client.post('/api/refresh',
+                                    headers=header_dict)
+        self.assertTrue(response.json)
+        self.assertEqual(response.status_code, 200)
+
+    def test_access_token_revoke(self):
+        header_dict = {
+            'Authorization': f'Bearer {self.existing_token}'
+        }
+        response = self.client.delete('/api/revoke/access',
+                                      headers=header_dict)
+        self.assertTrue(response.json)
+        self.assertEqual(response.status_code, 200)
+
+    def test_refresh_token_revoke(self):
+        header_dict = {
+            'Authorization': f'Bearer {self.refresh_token}'
+        }
+        response = self.client.delete('/api/revoke/refresh',
+                                      headers=header_dict)
+        self.assertTrue(response.json)
+        self.assertEqual(response.status_code, 200)
+
 
 if __name__ == '__main__':
     unittest.main()
-
