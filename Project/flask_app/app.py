@@ -32,16 +32,13 @@ def create_app(config=None):
             return send_from_directory(app.template_folder, 'index.html')
 
     from resources.authentication import (UserRegistration, UserLogin,
-                                          TokenRefresh, RevokeAccessToken,
-                                          RevokeRefreshToken, UnsetToken)
+                                          TokenRefresh, UnsetToken)
     from resources.user import GetUserInfo
 
     api.add_resource(UserRegistration, '/register')
     api.add_resource(UserLogin, '/login')
     api.add_resource(TokenRefresh, '/refresh')
     api.add_resource(UnsetToken, '/revoke')
-    api.add_resource(RevokeAccessToken, '/revoke/access')
-    api.add_resource(RevokeRefreshToken, '/revoke/refresh')
     api.add_resource(GetUserInfo, '/user')
 
     api_bp = Blueprint('api', __name__)

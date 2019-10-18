@@ -14,8 +14,6 @@ class BaseConfig:
     JWT_CSRF_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
     JWT_ACCESS_COOKIE_PATH = '/api/'
     JWT_REFRESH_COOKIE_PATH = '/api/refresh'
-    JWT_ACCESS_CSRF_COOKIE_PATH = '/api'
-    JWT_REFRESH_CSRF_COOKIE_PATH = '/api'
 
 
 class DevelopmentConfig(BaseConfig):

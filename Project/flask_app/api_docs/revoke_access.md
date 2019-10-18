@@ -1,13 +1,12 @@
-# Revoke Access Token
+# Revoke Token
 
-Revoke the access token given at login time, preventing future use of it to access resource.
-Should be called at logout.
+Unset the csrf ,access, and refresh cookies
 
-**URL** : `/api/revoke/access`
+**URL** : `/api/revoke/`
 
 **Method** : `DELETE`
 
-**Auth required** : YES
+**Auth required** : NO
 
 ## Success Response
 
@@ -15,10 +14,10 @@ Should be called at logout.
 
 **Content examples**
 
-When a token has been successfully revoked and put into the blacklist
+When the tokens have been successfully revoked and put into the blacklist
 
 ```json
 {
-    "message": "access token revoked"
+    "message": "tokens revoked successfully"
 }
 ```

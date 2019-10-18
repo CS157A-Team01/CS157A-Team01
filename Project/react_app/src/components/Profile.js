@@ -16,7 +16,9 @@ class Profile extends Component {
       username: data.username,
       password: data.hashed_password,
       primary_email: data.primary_email
-    }))
+    })).catch(err => {
+      console.log(err.response.data)
+    })
 
   }
 

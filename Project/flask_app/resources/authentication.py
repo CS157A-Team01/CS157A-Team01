@@ -121,7 +121,10 @@ class TokenRefresh(Resource):
 
 class UnsetToken(Resource):
     def delete(self):
-        resp = jsonify({'message': 'tokens revoked'})
+        msg = 'token revoked successfully'
+        if 'access_token_cookie' not in request.cookies:
+            msg = 'token already revoked'
+        resp = jsonify({'message': msg})
         unset_jwt_cookies(resp)
         return resp
 

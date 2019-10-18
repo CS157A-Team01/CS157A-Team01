@@ -151,24 +151,6 @@ class UserTestCase(BaseTestCase):
         self.assertTrue(response.json)
         self.assertEqual(response.status_code, 200)
 
-    # def test_access_token_revoke(self):
-    #     header_dict = {
-    #         'Authorization': f'Bearer {self.existing_token}'
-    #     }
-    #     response = self.client.delete('/api/revoke/access',
-    #                                   headers=header_dict)
-    #     self.assertTrue(response.json)
-    #     self.assertEqual(response.status_code, 200)
-    #
-    # def test_refresh_token_revoke(self):
-    #     header_dict = {
-    #         'Authorization': f'Bearer {self.refresh_token}'
-    #     }
-    #     response = self.client.delete('/api/revoke/refresh',
-    #                                   headers=header_dict)
-    #     self.assertTrue(response.json)
-    #     self.assertEqual(response.status_code, 200)
-
 
 if __name__ == '__main__':
     unittest.main()
