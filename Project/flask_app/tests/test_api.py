@@ -1,7 +1,8 @@
 import unittest
 from app import create_app
 from config import TestConfig
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import (create_access_token, create_refresh_token,
+                                get_csrf_token)
 from tests.utils import get_db_connection, init_test_db
 
 test_app = create_app(TestConfig)
@@ -17,6 +18,15 @@ class BaseTestCase(unittest.TestCase):
         with test_app.app_context():
             self.existing_token = create_access_token(identity=user_id)
             self.refresh_token = create_refresh_token(identity=user_id)
+            self.csrf_access = get_csrf_token(self.existing_token)
+            self.csrf_refresh = get_csrf_token(self.refresh_token)
+        self.client.set_cookie('localhost',
+                               'access_token_cookie',
+                               value=self.existing_token)
+        self.client.set_cookie('localhost',
+                               'refresh_token_cookie',
+                               value=self.refresh_token)
+
         self.connection.commit()
 
     def tearDown(self):
@@ -117,7 +127,7 @@ class UserTestCase(BaseTestCase):
 
     def test_get_user_info(self):
         header_dict = {
-            'Authorization': f'Bearer {self.existing_token}'
+            'X-CSRF-TOKEN': f'{self.csrf_access}'
         }
         response = self.client.get('/api/user', headers=header_dict)
         self.assertTrue(response.json)
@@ -125,30 +135,39 @@ class UserTestCase(BaseTestCase):
 
     def test_access_token_refresh(self):
         header_dict = {
-            'Authorization': f'Bearer {self.refresh_token}'
+            'X-CSRF-TOKEN': f'{self.csrf_refresh}'
         }
         response = self.client.post('/api/refresh',
                                     headers=header_dict)
         self.assertTrue(response.json)
-        self.assertEqual(response.status_code, 200)
+        try:
+            self.assertEqual(response.status_code, 200)
+        except AssertionError:
+            print(response.json)
+            raise AssertionError
 
-    def test_access_token_revoke(self):
-        header_dict = {
-            'Authorization': f'Bearer {self.existing_token}'
-        }
-        response = self.client.delete('/api/revoke/access',
-                                      headers=header_dict)
+    def test_token_revoke(self):
+        response = self.client.delete('/api/revoke')
         self.assertTrue(response.json)
         self.assertEqual(response.status_code, 200)
 
-    def test_refresh_token_revoke(self):
-        header_dict = {
-            'Authorization': f'Bearer {self.refresh_token}'
-        }
-        response = self.client.delete('/api/revoke/refresh',
-                                      headers=header_dict)
-        self.assertTrue(response.json)
-        self.assertEqual(response.status_code, 200)
+    # def test_access_token_revoke(self):
+    #     header_dict = {
+    #         'Authorization': f'Bearer {self.existing_token}'
+    #     }
+    #     response = self.client.delete('/api/revoke/access',
+    #                                   headers=header_dict)
+    #     self.assertTrue(response.json)
+    #     self.assertEqual(response.status_code, 200)
+    #
+    # def test_refresh_token_revoke(self):
+    #     header_dict = {
+    #         'Authorization': f'Bearer {self.refresh_token}'
+    #     }
+    #     response = self.client.delete('/api/revoke/refresh',
+    #                                   headers=header_dict)
+    #     self.assertTrue(response.json)
+    #     self.assertEqual(response.status_code, 200)
 
 
 if __name__ == '__main__':

@@ -1,10 +1,11 @@
 from flask_restful import Resource, reqparse
 from model import temp_blacklist
 from extensions import bcrypt, mysql
-from flask import request
+from flask import request, jsonify
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, jwt_refresh_token_required,
-                                jwt_required, get_raw_jwt)
+                                jwt_required, get_raw_jwt, set_access_cookies,
+                                set_refresh_cookies, unset_jwt_cookies)
 from common.utils import (validate_registration, send_confirmation_email,
                           generate_email_token)
 
@@ -96,10 +97,13 @@ class UserLogin(Resource):
                                       args['password']):
             access_token = create_access_token(identity=user_id)
             refresh_token = create_refresh_token(identity=user_id)
-            return {'message': f'username {username} '
-                               'logged in successfully',
-                    'access_token': access_token,
-                    'refresh_token': refresh_token}
+            resp_body = {'message': f'username {username} '
+                                    f'logged in successfully'}
+
+            resp = jsonify(resp_body)
+            set_access_cookies(resp, access_token)
+            set_refresh_cookies(resp, refresh_token)
+            return resp
 
         return ({'message': 'incorrect userid/password combination'},
                 409)
@@ -109,9 +113,17 @@ class TokenRefresh(Resource):
     @jwt_refresh_token_required
     def post(self):
         current_user = get_jwt_identity()
-        return {
-            'access_token': create_access_token(identity=current_user)
-        }
+        resp = jsonify({'message': 'access token refreshed'})
+        access_token = create_access_token(identity=current_user)
+        set_access_cookies(resp, access_token)
+        return resp
+
+
+class UnsetToken(Resource):
+    def delete(self):
+        resp = jsonify({'message': 'tokens revoked'})
+        unset_jwt_cookies(resp)
+        return resp
 
 
 class RevokeAccessToken(Resource):

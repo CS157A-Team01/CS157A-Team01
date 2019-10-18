@@ -7,8 +7,15 @@ import os
 class BaseConfig:
     DEBUG = False
     TESTING = False
+    JWT_ERROR_MESSAGE_KEY = 'message'
     JWT_BLACKLIST_ENABLED = True
+    JWT_TOKEN_LOCATION = ['cookies']
     JWT_BLACKLIST_TOKEN_CHECKS = ['access', 'refresh']
+    JWT_CSRF_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+    JWT_ACCESS_COOKIE_PATH = '/api/'
+    JWT_REFRESH_COOKIE_PATH = '/api/refresh'
+    JWT_ACCESS_CSRF_COOKIE_PATH = '/api'
+    JWT_REFRESH_CSRF_COOKIE_PATH = '/api'
 
 
 class DevelopmentConfig(BaseConfig):
@@ -39,6 +46,7 @@ class TestConfig(DevelopmentConfig):
     TESTING = True
     MYSQL_DATABASE_DB = 'unit_test'
     MAIL_SUPPRESS_SEND = True
+    JWT_CSRF_IN_COOKIES = False
 
 
 class ProductionConfig(BaseConfig):
