@@ -16,12 +16,13 @@ Open endpoints require no Authentication.
 
 ## Endpoints that require Authentication
 
-Authorization Header format : 
+Authorization Header for CSRF token format : 
 
-`"X-CSRF-TOKEN": "[csrf_refresh or csrf_access token]"`
+`"X-CSRF-TOKEN": "[csrf_refresh_token or csrf_access_token]"`
 
-Closed endpoints require a valid access token to be included in the header of the
-request. An access token can be acquired from the Login endpoint above.
+Closed endpoints require the cookies set during login to be sent along with
+the request, and the CSRF token must be set manually in the header to
+prevent CSRF attacks. 
 
 * [Show info](get_user.md) : `GET /api/user`
 * [Refresh access token](refresh_access.md) : `POST /api/refresh`

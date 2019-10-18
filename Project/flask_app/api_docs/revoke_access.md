@@ -2,7 +2,7 @@
 
 Unset the csrf ,access, and refresh cookies
 
-**URL** : `/api/revoke/`
+**URL** : `/api/revoke`
 
 **Method** : `DELETE`
 

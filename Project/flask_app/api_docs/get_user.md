@@ -2,7 +2,7 @@
 
 Get the details of the currently Authenticated User's username and email
 
-**URL** : `/api/user/`
+**URL** : `/api/user`
 
 **Method** : `GET`
 

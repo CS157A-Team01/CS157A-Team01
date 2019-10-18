@@ -1,8 +1,10 @@
 # Login
 
 Used to collect an access and refresh token for a registered user.
+httponly cookies containing access and refresh token will be set, 
+as well as CSRF tokens.  
 
-**URL** : `/api/login/`
+**URL** : `/api/login`
 
 **Method** : `POST`
 
@@ -34,9 +36,7 @@ Used to collect an access and refresh token for a registered user.
 
 ```json
 {
-    "message": "username demo logged in sucessfully",
-    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9",
-    "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+    "message": "username demo logged in sucessfully"
 }
 ```
 

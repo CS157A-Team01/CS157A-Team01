@@ -19,6 +19,6 @@ When a valid refresh token is submitted
 
 ```json
 {
-    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+    "message": "access token refreshed"
 }
 ```
