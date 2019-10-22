@@ -18,6 +18,9 @@ class BaseScraper:
     def scrape(self):
         raise NotImplementedError
 
+    def get_id_from_url(self):
+        raise NotImplementedError
+
 
 class AmazonScraper(BaseScraper):
     def scrape(self):
@@ -46,6 +49,11 @@ class AmazonScraper(BaseScraper):
             ('https', parsed_url.hostname,
              f'/dp/{self.product_id}', '', '', '')
         )
+
+    def get_id_from_url(self):
+        url = self.url.split('?')[0]
+        match_result = re.search(r'/([A-Z0-9]{10})', url)
+        return match_result.group(1)
 
 
 def test():
