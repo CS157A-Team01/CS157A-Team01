@@ -152,5 +152,16 @@ class UserTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class ProductTestCase(BaseTestCase):
+
+    def test_get_user_product(self):
+        header_dict = {
+            'X-CSRF-TOKEN': f'{self.csrf_access}'
+        }
+        response = self.client.get('/api/product', headers=header_dict)
+        self.assertTrue(response.json)
+        self.assertEqual(response.status_code, 200)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -62,7 +62,7 @@ class UserRegistration(Resource):
         cursor.execute(sql, (new_user_id, new_email_id))
         mysql.get_db().commit()
 
-        mail_disabled = False  # disable mail sending
+        mail_disabled = True  # disable mail sending
         if not mail_disabled:
             email = 'anon.software.dev@gmail.com'  # temporary recipient
             token = generate_email_token(email)

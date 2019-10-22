@@ -34,12 +34,14 @@ def create_app(config=None):
     from resources.authentication import (UserRegistration, UserLogin,
                                           TokenRefresh, UnsetToken)
     from resources.user import GetUserInfo
+    from resources.products import TrackProduct
 
     api.add_resource(UserRegistration, '/register')
     api.add_resource(UserLogin, '/login')
     api.add_resource(TokenRefresh, '/refresh')
     api.add_resource(UnsetToken, '/revoke')
     api.add_resource(GetUserInfo, '/user')
+    api.add_resource(TrackProduct, '/product')
 
     api_bp = Blueprint('api', __name__)
     api.init_app(api_bp)

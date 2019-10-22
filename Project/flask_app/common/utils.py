@@ -3,6 +3,7 @@ import re
 from flask_mail import Message
 from flask import current_app
 from extensions import mail
+import urllib.parse
 
 
 def validate_registration(args):
@@ -56,3 +57,10 @@ def send_confirmation_email(confirm_url, email):
                   recipients=[email],
                   body=f'Hello, and goodbye, {confirm_url}')
     mail.send(msg)
+
+
+def which_retailer(url):
+    parsed_url = urllib.parse.urlparse(url)
+    if 'amazon.com' in parsed_url.hostname:
+        return 'amazon'
+    return None
