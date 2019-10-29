@@ -57,7 +57,7 @@ body text NOT NULL,
 date timestamp,
 user_id INT NOT NULL,
 product_id VARCHAR(20) NOT NULL,
-retailer VARCHAR(20),
+retailer VARCHAR(20) NOT NULL,
 PRIMARY KEY(id),
 FOREIGN KEY(user_id) REFERENCES user(id),
 FOREIGN KEY(product_id, retailer) REFERENCES product(product_id, retailer)

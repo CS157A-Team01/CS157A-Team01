@@ -9,7 +9,9 @@ class BaseScraper:
     def __init__(self, url,
                  UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0'):
         self.url = url
-        self.UA = UA
+        self.header = {
+            "User-Agent": UA
+        }
         self.minimal_url = None
         self.product_id = None
         self.price = None
@@ -25,11 +27,8 @@ class BaseScraper:
 class AmazonScraper(BaseScraper):
     def scrape(self):
         url = self.url.split('?')[0]
-        headers = {
-            "User-Agent": self.UA
-        }
         try:
-            resp = requests.get(url, headers=headers).content
+            resp = requests.get(url, headers=self.header).content
         except ConnectionError:
             return
         soup = BeautifulSoup(resp, 'lxml')
@@ -37,8 +36,12 @@ class AmazonScraper(BaseScraper):
         self.title = soup.find(id='productTitle')
         self.product_id = soup.find('input', id='ASIN').get('value', None)
         regex = re.compile(r'priceblock_.+')
-        self.price = soup.find('span', id=regex)
+        price = soup.find('span', id=regex)
+        if not price:
+            price = soup.find('span', class_='offer-price')
 
+        print(price)
+        self.price = price
         self.title = self.title.get_text().strip() if self.title else None
         if self.price:
             self.price = self.price.get_text().strip()
@@ -57,7 +60,7 @@ class AmazonScraper(BaseScraper):
 
 
 def test():
-    url = 'https://www.amazon.com/Nestle-Chocolate-Assorted-Minis-40-Ounce/dp/B005K6ZLSK'
+    url = 'https://www.amazon.com/PlayStation-4-Slim-1TB-Console/dp/B071CV8CG2/ref=sr_1_2?keywords=ps4&qid=1572334926&sr=8-2&th=1'
     amazon_scraper = AmazonScraper(url)
     amazon_scraper.scrape()
     print(amazon_scraper.title)

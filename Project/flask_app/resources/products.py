@@ -47,15 +47,15 @@ class TrackProduct(Resource):
         current_user_id = get_jwt_identity()
         url = args['url']
         retailer = which_retailer(url)
-        scrapper = None
-        is_new = False  # flag is product is not in db
+        scraper = None
+        is_new = False  # flag if product is not already in db
 
         if not retailer:
             return {'message': 'link not supported'}, 400
         if retailer == 'amazon':
-            scrapper = AmazonScraper(url)
+            scraper = AmazonScraper(url)
 
-        product_id = scrapper.get_id_from_url()
+        product_id = scraper.get_id_from_url()
 
         cursor = mysql.get_db().cursor()
 
@@ -78,11 +78,11 @@ class TrackProduct(Resource):
         if not result:
             is_new = True
             # add product to db
-            scrapper.scrape()
-            price = scrapper.price
-            product_id = scrapper.product_id
-            title = scrapper.title
-            min_url = scrapper.minimal_url
+            scraper.scrape()
+            price = scraper.price
+            product_id = scraper.product_id
+            title = scraper.title
+            min_url = scraper.minimal_url
 
             if None in (price, product_id, title, min_url):
                 return {'message': 'unable to obtain necessary product info'}, 422
