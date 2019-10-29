@@ -44,7 +44,10 @@ class AmazonScraper(BaseScraper):
         self.title = self.title.get_text().strip() if self.title else None
         if self.price:
             self.price = self.price.get_text().strip()
-            self.price = float(re.sub(r'[$.]+', '', self.price)) / 100
+            try:
+                self.price = float(re.sub(r'[$.]+', '', self.price)) / 100
+            except ValueError:
+                self.price = None
 
         parsed_url = urllib.parse.urlparse(url)
         self.minimal_url = urllib.parse.urlunparse(

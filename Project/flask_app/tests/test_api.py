@@ -159,7 +159,7 @@ class ProductTestCase(BaseTestCase):
             'X-CSRF-TOKEN': f'{self.csrf_access}'
         }
         response = self.client.get('/api/product', headers=header_dict)
-        self.assertTrue(response.json)
+        self.assertTrue(response.json is not None)
         self.assertEqual(response.status_code, 200)
 
 
