@@ -26,3 +26,5 @@ prevent CSRF attacks.
 
 * [Show info](get_user.md) : `GET /api/user`
 * [Refresh access token](refresh_access.md) : `POST /api/refresh`
+* [Add product to tracking](add_tracking.md) : `POST /api/product`
+* [Get current user's track list](get_tracking.md) : `GET /api/product`

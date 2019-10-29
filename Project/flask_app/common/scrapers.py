@@ -40,7 +40,6 @@ class AmazonScraper(BaseScraper):
         if not price:
             price = soup.find('span', class_='offer-price')
 
-        print(price)
         self.price = price
         self.title = self.title.get_text().strip() if self.title else None
         if self.price:

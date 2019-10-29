@@ -2,12 +2,13 @@ from flask_restful import Resource, reqparse
 from model import temp_blacklist
 from extensions import bcrypt, mysql
 from flask import request, jsonify
+from pymysql.err import OperationalError
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, jwt_refresh_token_required,
                                 jwt_required, get_raw_jwt, set_access_cookies,
                                 set_refresh_cookies, unset_jwt_cookies)
 from common.utils import (validate_registration, send_confirmation_email,
-                          generate_email_token)
+                          generate_email_token, error_resp)
 
 register_parser = reqparse.RequestParser()
 register_parser.add_argument(
@@ -30,15 +31,19 @@ class UserRegistration(Resource):
         failed_msg = validate_registration(args)
         if failed_msg:
             return {'message': failed_msg}, 422
-        cursor = mysql.get_db().cursor()
 
-        cursor.execute(
-            "SELECT * FROM user WHERE username LIKE %s",
-            (args['username'],))
-        username = cursor.fetchone()
+        try:
+            cursor = mysql.get_db().cursor()
+            cursor.execute(
+                "SELECT * FROM user WHERE username LIKE %s",
+                (args['username'],))
+            username = cursor.fetchone()
 
-        sql = "SELECT * FROM email WHERE address LIKE %s"
-        cursor.execute(sql, (args['email']))
+            sql = "SELECT * FROM email WHERE address LIKE %s"
+            cursor.execute(sql, (args['email']))
+        except OperationalError as e:
+            return error_resp(e)
+
         email = cursor.fetchone()
 
         if username or email:
@@ -48,19 +53,22 @@ class UserRegistration(Resource):
         pwd_hash = bcrypt.generate_password_hash(
             args['password'].encode('utf-8'))
 
-        cursor.execute("INSERT INTO user (username, password)"
-                       "VALUES (%s, %s)",
-                       (args['username'], pwd_hash))
-        new_user_id = cursor.lastrowid
-        sql = f"INSERT INTO email (address, user_id) " \
-              f"VALUES (%s,{new_user_id})"
-        cursor.execute(sql, args['email'])
-        new_email_id = cursor.lastrowid
+        try:
+            cursor.execute("INSERT INTO user (username, password)"
+                           "VALUES (%s, %s)",
+                           (args['username'], pwd_hash))
+            new_user_id = cursor.lastrowid
+            sql = f"INSERT INTO email (address, user_id) " \
+                  f"VALUES (%s,{new_user_id})"
+            cursor.execute(sql, args['email'])
+            new_email_id = cursor.lastrowid
 
-        sql = 'INSERT INTO user_primary_email (user_id, email_id) ' \
-              'VALUES (%s, %s)'
-        cursor.execute(sql, (new_user_id, new_email_id))
-        mysql.get_db().commit()
+            sql = 'INSERT INTO user_primary_email (user_id, email_id) ' \
+                  'VALUES (%s, %s)'
+            cursor.execute(sql, (new_user_id, new_email_id))
+            mysql.get_db().commit()
+        except OperationalError as e:
+            return error_resp(e)
 
         mail_disabled = True  # disable mail sending
         if not mail_disabled:
@@ -80,13 +88,15 @@ class UserLogin(Resource):
         if len(args['userid']) > 100:
             return {'message': 'username or email should be '
                                'less than 100 characters'}, 400
-
-        cursor = mysql.get_db().cursor()
-        sql = "SELECT user.id, password, username FROM user JOIN email " \
-              "on user.id = email.user_id " \
-              "WHERE email.address = %s or user.username = %s"
-        cursor.execute(sql, (args['userid'], args['userid']))
-        result = cursor.fetchone()
+        try:
+            cursor = mysql.get_db().cursor()
+            sql = "SELECT user.id, password, username FROM user JOIN email " \
+                  "on user.id = email.user_id " \
+                  "WHERE email.address = %s or user.username = %s"
+            cursor.execute(sql, (args['userid'], args['userid']))
+            result = cursor.fetchone()
+        except OperationalError as e:
+            return error_resp(e)
 
         if not result:
             return ({'message': 'incorrect userid/password combination'},

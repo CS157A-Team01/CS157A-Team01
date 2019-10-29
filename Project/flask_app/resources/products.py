@@ -2,7 +2,8 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from extensions import mysql
 from common.scrapers import AmazonScraper
-from common.utils import which_retailer
+from common.utils import which_retailer, error_resp
+from pymysql.err import OperationalError
 
 product_parser = reqparse.RequestParser()
 product_parser.add_argument(
@@ -16,21 +17,24 @@ class TrackProduct(Resource):
     @jwt_required
     def get(self):
         current_user = get_jwt_identity()
-        cursor = mysql.get_db().cursor()
-        sql = '''
-        SELECT name, url, price, desired_price, product.retailer
-        FROM product JOIN product_tracked_by_user
-        ON product.product_id = product_tracked_by_user.product_id 
-        and product.retailer = product_tracked_by_user.retailer
-        WHERE user_id=%s
-        '''
+        try:
+            cursor = mysql.get_db().cursor()
+            sql = '''
+            SELECT name, url, price, desired_price, product.retailer
+            FROM product JOIN product_tracked_by_user
+            ON product.product_id = product_tracked_by_user.product_id 
+            and product.retailer = product_tracked_by_user.retailer
+            WHERE user_id=%s
+            '''
+        except OperationalError as e:
+            return error_resp(e)
+
         cursor.execute(sql, (current_user,))
 
         results = cursor.fetchall()
-        if not results:
-            return {'message': 'No product currently being tracked'}
-
         resp = []
+        if not results:
+            return resp
         for result in results:
             name, url, price, desired_price, retailer = result
             temp = {'retailer': retailer,

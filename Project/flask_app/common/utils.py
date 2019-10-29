@@ -1,9 +1,13 @@
 from itsdangerous import URLSafeTimedSerializer
 import re
 from flask_mail import Message
-from flask import current_app
+from flask import current_app, make_response
 from extensions import mail
 import urllib.parse
+
+
+def error_resp(error_msg, code=500):
+    return make_response({'error': str(error_msg)}, code)
 
 
 def validate_registration(args):
