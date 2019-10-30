@@ -25,6 +25,9 @@ the request, and the CSRF token must be set manually in the header to
 prevent CSRF attacks. 
 
 * [Show info](get_user.md) : `GET /api/user`
+* [Add email](add_email.md) : `POST /api/user/email`
+* [Change password](change_password.md) : `PUT /api/user/password`
 * [Refresh access token](refresh_access.md) : `POST /api/refresh`
 * [Add product to tracking](add_tracking.md) : `POST /api/product`
 * [Get current user's track list](get_tracking.md) : `GET /api/product`
+
