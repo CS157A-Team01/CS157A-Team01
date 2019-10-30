@@ -33,7 +33,7 @@ def create_app(config=None):
 
     from resources.authentication import (UserRegistration, UserLogin,
                                           TokenRefresh, UnsetToken)
-    from resources.user import GetUserInfo
+    from resources.user import GetUserInfo, UpdateUserInfo
     from resources.products import TrackProduct
 
     api.add_resource(UserRegistration, '/register')
@@ -41,6 +41,7 @@ def create_app(config=None):
     api.add_resource(TokenRefresh, '/refresh')
     api.add_resource(UnsetToken, '/revoke')
     api.add_resource(GetUserInfo, '/user')
+    api.add_resource(UpdateUserInfo, '/user/<string:option>')
     api.add_resource(TrackProduct, '/product')
 
     api_bp = Blueprint('api', __name__)
