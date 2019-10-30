@@ -3,7 +3,7 @@ from flask import redirect, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from extensions import mysql
 from pymysql.err import OperationalError
-from common.utils import error_resp, add_email
+from common.utils import error_resp, add_email, change_password
 
 
 class UpdateUserInfo(Resource):
@@ -14,6 +14,11 @@ class UpdateUserInfo(Resource):
                               required=True,
                               help='new email field is required')
 
+    new_pass_parser = reqparse.RequestParser()
+    new_pass_parser.add_argument('new_password',
+                                 help='new password field required',
+                                 required=True)
+
     def valid_option(self, option):
         return option in self.options
 
@@ -23,7 +28,7 @@ class UpdateUserInfo(Resource):
             return redirect('/')
         # only email can be POST
         if option != 'email':
-            abort(405)
+            return abort(405)
         current_user = get_jwt_identity()
         args = self.email_parser.parse_args()
         new_email = args['new_email']
@@ -36,7 +41,26 @@ class UpdateUserInfo(Resource):
 
     @jwt_required
     def put(self, option):
-        pass
+        """
+        For updating user's info
+        :param option:
+        :return: Response
+        """
+
+        if not self.valid_option(option):
+            return redirect('/')
+        current_user = get_jwt_identity()
+
+        try:
+            db = mysql.get_db()
+        except OperationalError:
+            return abort(500)
+
+        if option == 'password':
+            args = self.new_pass_parser.parse_args()
+            return change_password(db, current_user, args['new_password'])
+
+        return abort(405)
 
 
 class GetUserInfo(Resource):
@@ -55,11 +79,21 @@ class GetUserInfo(Resource):
             WHERE user.id = %s
             '''
             cursor.execute(sql, (current_user,))
+            username, password, address = cursor.fetchone()
+
+            sql = '''
+            SELECT address, confirmed FROM email
+            WHERE user_id = %s
+            '''
+            cursor.execute(sql, (current_user,))
+            emails = cursor.fetchall()
         except OperationalError as e:
             return error_resp(e)
 
-        username, password, address = cursor.fetchone()
+        email_list = [{'email': email, 'confirmed': bool(confirmed)}
+                      for email, confirmed in emails]
 
         return {'username': username,
                 'primary_email': address,
+                'all_email': email_list,
                 'hashed_password': password.decode('utf-8')}

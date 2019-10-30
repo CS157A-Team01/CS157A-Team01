@@ -1,9 +1,35 @@
 from itsdangerous import URLSafeTimedSerializer
 import re
 from flask_mail import Message
-from flask import current_app, make_response
-from extensions import mail
+from flask import current_app, make_response, abort
+from extensions import mail, bcrypt
 import urllib.parse
+from pymysql.err import OperationalError
+
+
+def change_password(db, user_id, new_pwd):
+    """
+    Change user's current password
+    :param db:
+    :param user_id:
+    :param new_pwd:
+    :return: Response Object
+    """
+    cursor = db.cursor()
+    sql = '''
+    UPDATE user
+    SET password = %s
+    WHERE id = %s
+    '''
+    pwd_hash = bcrypt.generate_password_hash(new_pwd.encode('utf-8'))
+    try:
+        cursor.execute(sql, (pwd_hash, user_id))
+        db.commit()
+    except OperationalError as e:
+        print(e)
+        return abort(500)
+
+    return make_response({'message': 'password updated'})
 
 
 def add_email(db, new_email, user):
@@ -25,16 +51,22 @@ def add_email(db, new_email, user):
     SELECT * FROM email
     WHERE address = %s
     '''
-    cursor.execute(sql, (new_email,))
-    if cursor.fetchone():
-        return make_response({'message': 'email already in use'}, 409)
+    try:
+        cursor.execute(sql, (new_email,))
 
-    sql = '''
-    INSERT INTO email (address, user_id)
-    VALUES (%s, %s)
-    '''
-    cursor.execute(sql, (new_email, user))
-    db.commit()
+        if cursor.fetchone():
+            return make_response({'message': 'email already in use'}, 409)
+
+        sql = '''
+        INSERT INTO email (address, user_id)
+        VALUES (%s, %s)
+        '''
+        cursor.execute(sql, (new_email, user))
+        db.commit()
+
+    except OperationalError as e:
+        print(e)
+        return abort(500)
 
     return make_response({'message': 'new email added',
                           'email': new_email})

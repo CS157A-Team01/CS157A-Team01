@@ -90,9 +90,11 @@ class UserLogin(Resource):
                                'less than 100 characters'}, 400
         try:
             cursor = mysql.get_db().cursor()
-            sql = "SELECT user.id, password, username FROM user JOIN email " \
-                  "on user.id = email.user_id " \
-                  "WHERE email.address = %s or user.username = %s"
+            sql = '''
+            SELECT user.id, password, username FROM user JOIN email
+            ON user.id = email.user_id
+            WHERE email.address = %s or user.username = %s
+            '''
             cursor.execute(sql, (args['userid'], args['userid']))
             result = cursor.fetchone()
         except OperationalError as e:

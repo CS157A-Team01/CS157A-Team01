@@ -179,6 +179,14 @@ class UserTestCase(BaseTestCase):
         self.assertFalse(response.json is None)
         self.assertEqual(response.status_code, 400)
 
+    def test_change_password(self):
+        data = {"new_password": 'doesnt_matter'}
+        response = self.client.put('/api/user/password',
+                                   headers=self.access_header,
+                                   data=data)
+        self.assertFalse(response.json is None)
+        self.assertEqual(response.status_code, 200)
+
 
 class ProductTestCase(BaseTestCase):
 
