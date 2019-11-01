@@ -1,21 +1,21 @@
 import os
-from flask import Flask, send_from_directory, Blueprint
+from flask import Flask, send_from_directory, Blueprint, safe_join
 from config import DevelopmentConfig
 from extensions import jwt, bcrypt, api, cors, mysql, mail
 
 
 def create_app(config=None):
-    app = Flask(__name__,
-                template_folder='../react_app/build',
-                static_folder='../react_app/build/static')
-    app.config.from_object(config)
+    new_app = Flask(__name__,
+                    template_folder='../react_app/build',
+                    static_folder='../react_app/build/static')
+    new_app.config.from_object(config)
 
-    with app.app_context():
-        jwt.init_app(app)
-        bcrypt.init_app(app)
-        cors.init_app(app)
-        mysql.init_app(app)
-        mail.init_app(app)
+    with new_app.app_context():
+        jwt.init_app(new_app)
+        bcrypt.init_app(new_app)
+        cors.init_app(new_app)
+        mysql.init_app(new_app)
+        mail.init_app(new_app)
 
     from model import temp_blacklist
     @jwt.token_in_blacklist_loader
@@ -23,13 +23,13 @@ def create_app(config=None):
         return decrypted_token['jti'] in temp_blacklist
 
     # Let react handle routing
-    @app.route('/', defaults={'path': ''})
-    @app.route('/<path:path>')
+    @new_app.route('/', defaults={'path': ''})
+    @new_app.route('/<path:path>')
     def serve(path):
-        if path and os.path.exists(app.template_folder + '/' + path):
-            return send_from_directory(app.template_folder, path)
+        if path and os.path.exists(safe_join(new_app.template_folder, path)):
+            return send_from_directory(new_app.template_folder, path)
         else:
-            return send_from_directory(app.template_folder, 'index.html')
+            return send_from_directory(new_app.template_folder, 'index.html')
 
     from resources.authentication import (UserRegistration, UserLogin,
                                           TokenRefresh, UnsetToken)
@@ -46,8 +46,8 @@ def create_app(config=None):
 
     api_bp = Blueprint('api', __name__)
     api.init_app(api_bp)
-    app.register_blueprint(api_bp, url_prefix='/api')
-    return app
+    new_app.register_blueprint(api_bp, url_prefix='/api')
+    return new_app
 
 
 if __name__ == "__main__":

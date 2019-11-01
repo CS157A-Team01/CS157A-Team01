@@ -24,7 +24,10 @@ def get_db_connection():
     return con
 
 
-def init_test_db(cursor):
+def init_test_db(cursor, username, email):
+
+    secondary_email = 'secondary@mail.com'
+
     init_sql = f'''
     DROP DATABASE IF EXISTS {TestConfig.MYSQL_DATABASE_DB};
     CREATE DATABASE {TestConfig.MYSQL_DATABASE_DB}; 
@@ -37,11 +40,12 @@ def init_test_db(cursor):
     pw = bcrypt.generate_password_hash('test')
     sql = "INSERT INTO user (username, password) " \
           "VALUES (%s, %s)"
-    cursor.execute(sql, ('existing', pw))
+    cursor.execute(sql, (username, pw))
     new_user_id = cursor.lastrowid
     sql = "INSERT INTO email (address, user_id) " \
-          f"VALUES ('existing@mail.com',{new_user_id})"
-    cursor.execute(sql)
+          f"VALUES (%s, %s)"
+    cursor.executemany(sql,
+                       [(email, new_user_id), (secondary_email, new_user_id)])
     new_email_id = cursor.lastrowid
     sql = 'INSERT INTO user_primary_email (user_id, email_id) ' \
           'VALUES (%s, %s)'

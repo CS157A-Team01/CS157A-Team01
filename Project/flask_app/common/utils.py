@@ -7,6 +7,58 @@ import urllib.parse
 from pymysql.err import OperationalError
 
 
+def delete_email(db, user_id, email):
+    """
+    delete email address from DB
+    :param db:
+    :param user_id:
+    :param email:
+    :return: Response Object
+    """
+
+    cursor = db.cursor()
+    sql = '''
+    DELETE FROM email
+    WHERE address = %s
+    AND user_id = %s
+    '''
+    rows_affected = cursor.execute(sql, (email, user_id))
+    db.commit()
+    if rows_affected == 0:
+        return make_response({'message': 'email does not belong to user'}, 409)
+    return make_response({'message': 'email deleted successfully'})
+
+
+def change_username(db, user_id, new_username):
+    """
+    change username in DB
+    :param db:
+    :param user_id:
+    :param new_username:
+    :return: Response Object
+    """
+
+    cursor = db.cursor()
+    exist = username_exists(cursor, new_username)
+    if exist:
+        return make_response({'message': 'username already in use'}, 409)
+
+    sql = '''
+    UPDATE user
+    SET username = %s
+    WHERE id = %s
+    '''
+    try:
+        cursor.execute(sql, (new_username, user_id))
+        db.commit()
+    except OperationalError as e:
+        print(e)
+        return abort(500)
+
+    return make_response({'message': 'username updated',
+                          'username': new_username})
+
+
 def change_password(db, user_id, new_pwd):
     """
     Change user's current password
@@ -15,6 +67,7 @@ def change_password(db, user_id, new_pwd):
     :param new_pwd:
     :return: Response Object
     """
+
     cursor = db.cursor()
     sql = '''
     UPDATE user
@@ -32,7 +85,7 @@ def change_password(db, user_id, new_pwd):
     return make_response({'message': 'password updated'})
 
 
-def add_email(db, new_email, user):
+def add_email(db, user, new_email):
     """
     Add email to database for current user
     :param db:
@@ -40,21 +93,16 @@ def add_email(db, new_email, user):
     :param user:
     :return: Response Object
     """
+
     err = validate_email(new_email)
     if err:
         return make_response({'message': err}, 400)
 
     cursor = db.cursor()
-
-    # Check if email already in DB
-    sql = '''
-    SELECT * FROM email
-    WHERE address = %s
-    '''
     try:
-        cursor.execute(sql, (new_email,))
-
-        if cursor.fetchone():
+        # Check if email already in DB
+        exist = email_exists(cursor, new_email)
+        if exist:
             return make_response({'message': 'email already in use'}, 409)
 
         sql = '''
@@ -74,6 +122,38 @@ def add_email(db, new_email, user):
 
 def error_resp(error_msg, code=500):
     return make_response({'error': str(error_msg)}, code)
+
+
+def username_exists(cursor, username):
+    """
+    Check if username already exists in the DB
+    :param cursor:
+    :param username:
+    :return: query result or None
+    """
+
+    sql = '''
+    SELECT * FROM user
+    WHERE username = %s
+    '''
+    cursor.execute(sql, (username,))
+    return cursor.fetchone()
+
+
+def email_exists(cursor, email):
+    """
+    Check if email exists in DB
+    :param cursor:
+    :param email:
+    :return: query result or None
+    """
+
+    sql = '''
+    SELECT * FROM email
+    WHERE address = %s
+    '''
+    cursor.execute(sql, (email,))
+    return cursor.fetchone()
 
 
 def validate_registration(args):

@@ -8,7 +8,8 @@ from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, get_raw_jwt, set_access_cookies,
                                 set_refresh_cookies, unset_jwt_cookies)
 from common.utils import (validate_registration, send_confirmation_email,
-                          generate_email_token, error_resp)
+                          generate_email_token, error_resp, username_exists,
+                          email_exists)
 
 register_parser = reqparse.RequestParser()
 register_parser.add_argument(
@@ -31,20 +32,14 @@ class UserRegistration(Resource):
         failed_msg = validate_registration(args)
         if failed_msg:
             return {'message': failed_msg}, 422
-
+        new_username = args['username'].lower()
+        new_email = args['email'].lower()
         try:
             cursor = mysql.get_db().cursor()
-            cursor.execute(
-                "SELECT * FROM user WHERE username LIKE %s",
-                (args['username'],))
-            username = cursor.fetchone()
-
-            sql = "SELECT * FROM email WHERE address LIKE %s"
-            cursor.execute(sql, (args['email']))
+            username = username_exists(cursor, new_username)
+            email = email_exists(cursor, new_email)
         except OperationalError as e:
             return error_resp(e)
-
-        email = cursor.fetchone()
 
         if username or email:
             return {'message': f'{"username " if username else "email "}'
@@ -54,17 +49,24 @@ class UserRegistration(Resource):
             args['password'].encode('utf-8'))
 
         try:
-            cursor.execute("INSERT INTO user (username, password)"
-                           "VALUES (%s, %s)",
-                           (args['username'], pwd_hash))
+            sql = '''
+            INSERT INTO user (username, password)
+            VALUES (%s, %s)
+            '''
+            cursor.execute(sql, (new_username, pwd_hash))
             new_user_id = cursor.lastrowid
-            sql = f"INSERT INTO email (address, user_id) " \
-                  f"VALUES (%s,{new_user_id})"
-            cursor.execute(sql, args['email'])
+
+            sql = '''
+            INSERT INTO email (address, user_id)
+            VALUES (%s, %s)
+            '''
+            cursor.execute(sql, (new_email, new_user_id))
             new_email_id = cursor.lastrowid
 
-            sql = 'INSERT INTO user_primary_email (user_id, email_id) ' \
-                  'VALUES (%s, %s)'
+            sql = '''
+            INSERT INTO user_primary_email (user_id, email_id)
+            VALUES (%s, %s)
+            '''
             cursor.execute(sql, (new_user_id, new_email_id))
             mysql.get_db().commit()
         except OperationalError as e:
@@ -77,9 +79,9 @@ class UserRegistration(Resource):
             url = request.url_root + f'confirm-email/{token}'
             send_confirmation_email(url, email)
 
-        return {'message': f'user {args["username"]} registered',
-                'username': args["username"],
-                'email': args["email"]}
+        return {'message': f'user {new_username} registered',
+                'username': new_username,
+                'email': new_email}
 
 
 class UserLogin(Resource):

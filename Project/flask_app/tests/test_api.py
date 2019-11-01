@@ -14,7 +14,10 @@ class BaseTestCase(unittest.TestCase):
         self.client = test_app.test_client()
         self.connection = get_db_connection()
         self.cursor = self.connection.cursor()
-        user_id = init_test_db(self.cursor)
+        self.test_username = 'existing'
+        self.test_email = 'existing@mail.com'
+        user_id = init_test_db(self.cursor, self.test_username,
+                               self.test_email)
         with test_app.app_context():
             self.access_token = create_access_token(identity=user_id)
             self.refresh_token = create_refresh_token(identity=user_id)
@@ -156,7 +159,7 @@ class UserTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_add_new_email(self):
-        data = {"new_email": "newemail@mail.com"}
+        data = {"email": "newemail@mail.com"}
         response = self.client.post('/api/user/email',
                                     headers=self.access_header,
                                     data=data)
@@ -164,7 +167,7 @@ class UserTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_add_new_conflict_email(self):
-        data = {"new_email": "existing@mail.com"}
+        data = {"email": "existing@mail.com"}
         response = self.client.post('/api/user/email',
                                     headers=self.access_header,
                                     data=data)
@@ -172,12 +175,36 @@ class UserTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 409)
 
     def test_add_new_invalid_email(self):
-        data = {"new_email": "".join(['e' for _ in range(120)])}
+        data = {"email": "".join(['e' for _ in range(120)])}
         response = self.client.post('/api/user/email',
                                     headers=self.access_header,
                                     data=data)
         self.assertFalse(response.json is None)
         self.assertEqual(response.status_code, 400)
+
+    def test_delete_email(self):
+        email = 'secondary@mail.com'
+        data = {'email': email}
+        response = self.client.delete('/api/user/email',
+                                      headers=self.access_header,
+                                      data=data)
+        self.assertFalse(response.json is None)
+        self.assertEqual(response.status_code, 200)
+        sql = '''
+        SELECT * FROM email WHERE address = %s
+        '''
+        self.cursor.execute(sql, email)
+        result = self.cursor.fetchone()
+        self.assertIsNone(result)
+
+    def test_delete_email_not_exist(self):
+        email = 'notexist@mail.com'
+        data = {'email': email}
+        response = self.client.delete('/api/user/email',
+                                      headers=self.access_header,
+                                      data=data)
+        self.assertFalse(response.json is None)
+        self.assertEqual(response.status_code, 409)
 
     def test_change_password(self):
         data = {"new_password": 'doesnt_matter'}
@@ -186,6 +213,31 @@ class UserTestCase(BaseTestCase):
                                    data=data)
         self.assertFalse(response.json is None)
         self.assertEqual(response.status_code, 200)
+
+    def test_change_username(self):
+        new_username = 'somenewname'
+        data = {"new_username": new_username}
+        response = self.client.put('/api/user/username',
+                                   headers=self.access_header,
+                                   data=data)
+        self.assertFalse(response.json is None)
+        self.assertEqual(response.status_code, 200)
+        sql = '''
+        SELECT username FROM user
+        WHERE username = %s
+        '''
+        self.cursor.execute(sql, new_username)
+        expected_username = self.cursor.fetchone().get('username', None)
+        self.assertEqual(expected_username, new_username)
+
+    def test_change_username_conflict(self):
+        new_username = self.test_username
+        data = {"new_username": new_username}
+        response = self.client.put('/api/user/username',
+                                   headers=self.access_header,
+                                   data=data)
+        self.assertFalse(response.json is None)
+        self.assertEqual(response.status_code, 409)
 
 
 class ProductTestCase(BaseTestCase):
