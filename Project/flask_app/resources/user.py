@@ -13,16 +13,16 @@ class UpdateUserInfo(Resource):
     email_parser = reqparse.RequestParser()
     email_parser.add_argument('email',
                               required=True,
-                              help='new email field is required')
+                              help='email field is required')
 
     new_pass_parser = reqparse.RequestParser()
     new_pass_parser.add_argument('new_password',
-                                 help='new password field required',
+                                 help='new_password field required',
                                  required=True)
 
     new_username_parser = reqparse.RequestParser()
     new_username_parser.add_argument('new_username',
-                                     help='new username field required',
+                                     help='new_username field required',
                                      required=True)
 
     def valid_option(self, option):

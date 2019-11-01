@@ -38,6 +38,10 @@ def change_username(db, user_id, new_username):
     :return: Response Object
     """
 
+    err = validate_username(new_username)
+    if err:
+        return make_response({'message': err}, 400)
+
     cursor = db.cursor()
     exist = username_exists(cursor, new_username)
     if exist:

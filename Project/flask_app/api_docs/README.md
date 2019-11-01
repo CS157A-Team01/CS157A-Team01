@@ -26,6 +26,8 @@ prevent CSRF attacks.
 
 * [Show info](get_user.md) : `GET /api/user`
 * [Add email](add_email.md) : `POST /api/user/email`
+* [Delete email](delete_email.md): `DELETE /api/user/email`
+* [Change username](change_username.md): `PUT /api/user/username`
 * [Change password](change_password.md) : `PUT /api/user/password`
 * [Refresh access token](refresh_access.md) : `POST /api/refresh`
 * [Add product to tracking](add_tracking.md) : `POST /api/product`

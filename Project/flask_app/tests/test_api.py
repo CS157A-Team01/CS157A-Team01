@@ -239,6 +239,14 @@ class UserTestCase(BaseTestCase):
         self.assertFalse(response.json is None)
         self.assertEqual(response.status_code, 409)
 
+    def test_change_username_invalid(self):
+        data = {"new_username": 'x'}
+        response = self.client.put('/api/user/username',
+                                   headers=self.access_header,
+                                   data=data)
+        self.assertFalse(response.json is None)
+        self.assertEqual(response.status_code, 400)
+
 
 class ProductTestCase(BaseTestCase):
 

@@ -12,7 +12,7 @@ Add a new email address associated with the current user
 
 ```json
 {
-    "new_email": "[new email address]"
+    "email": "[new email address]"
 }
 ```
 

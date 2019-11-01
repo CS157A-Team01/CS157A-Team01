@@ -1,12 +1,13 @@
 [**API Documentation**](api_docs/README.md)
 
-# Flask Setup
+# Flask Setup for Testing
 
-Install [Python 3.7.4](https://www.python.org/)
+
+Install [Python 3.7.4](https://www.python.org/) or higher
 
 #### Replace any `python/pip` with `python3/pip3` if on macOS!
 
-### Step 1 (optional but recommended)
+### Step 1 (optional but highly recommended)
 
 ------------
 
@@ -23,6 +24,12 @@ virtualenv venv
 
 Follow [this](https://virtualenv.pypa.io/en/stable/userguide/) guide to activate the environment for your particular system
 
+Linux/OSX
+`source /path/to/ENV/bin/activate`
+
+Windows
+`\path\to\env\Scripts\activate`
+
 ### Step 2
 
 ------------
@@ -32,28 +39,19 @@ Install requirements
 	cd /Project/flask_app
 	pip install -r requirements.txt
 
-### Step 3
-
----
-
-~~Make sure a MySQL instance is running on the machine on port 3306 with username `root` and password `root`~~
-
-~~create a database called `mock` using `create database mock`~~
-
-~~*(NOT RECOMMENDED) you could alternatively change line 18 of config.py to match your specific setup*~~
-
-~~create necessary tables:~~
-
-~~`python create_table.py `~~
-
-
-### Step 4
+# Starting the Flask Server
 
 ---------
+Activate the virtual environment from step 1 of setup, disregard this if setup
+ was done outside of virtual environment
+
 
 Run flask
 
     cd /Project/flask_app
     python app.py
 
-If all goes well the API should be accessable via `http://localhost:5000`
+API server should be accessible via `http://localhost:5000`
+
+Follow [React's Documentation](../react_app/README.md) for front-end's setup
+ and build
