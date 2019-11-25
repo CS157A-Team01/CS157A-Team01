@@ -54,7 +54,7 @@ FOREIGN KEY(admin_id) REFERENCES admin(id)
 CREATE TABLE IF NOT EXISTS comment(
 id INT AUTO_INCREMENT,
 body text NOT NULL,
-date timestamp,
+date timestamp DEFAULT CURRENT_TIMESTAMP,
 user_id INT NOT NULL,
 product_id VARCHAR(20) NOT NULL,
 retailer VARCHAR(20) NOT NULL,

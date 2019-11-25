@@ -3,7 +3,7 @@ import re
 from flask_mail import Message
 from flask import current_app, make_response, abort
 from extensions import mail, bcrypt
-from pymysql.err import OperationalError
+from pymysql.err import OperationalError, IntegrityError
 
 
 def delete_email(db, user_id, email):
@@ -208,3 +208,47 @@ def send_confirmation_email(confirm_url, email):
                   recipients=[email],
                   body=f'Hello, and goodbye, {confirm_url}')
     mail.send(msg)
+
+
+def add_comment(db, user, retailer, product_id, comment):
+    cursor = db.cursor()
+
+    sql = '''
+    INSERT INTO comment (body, user_id, product_id, retailer)
+    VALUES (%s, %s, %s, %s)
+    '''
+    try:
+        cursor.execute(sql, (comment, user, product_id, retailer))
+        db.commit()
+    except OperationalError as e:
+        print(e)
+        return abort(500)
+    except IntegrityError as e:
+        print(e)
+        return error_resp('check retailer and product id', 400)
+    return make_response({'message': 'comment added'}, 200)
+
+
+def get_comment(db, retailer, prod_id):
+    cursor = db.cursor()
+    sql = '''
+    SELECT username, body, date FROM comment JOIN user u ON 
+    comment.user_id = 
+    u.id
+    JOIN product p ON comment.product_id = p.product_id AND comment.retailer 
+    = p.retailer
+    WHERE p.retailer = %s AND p.product_id = %s
+    ORDER BY comment.date
+    '''
+    cursor.execute(sql, (retailer, prod_id))
+    results = cursor.fetchall()
+    if not results:
+        return make_response({'message': 'no comments found'}, 200)
+    comments = []
+    for username, comment, date in results:
+        comments.append({
+            "username": username,
+            "comment": comment,
+            "date": date.strftime("%m/%d/%y %H:%M")
+        })
+    return comments

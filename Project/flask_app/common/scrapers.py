@@ -112,7 +112,7 @@ class WalmartScraper(BaseScraper):
 
     def get_id_from_url(self):
         url = self.url.split('?')[0]
-        match_result = re.search(r'/(\d{8})', url)
+        match_result = re.search(r'/(\d{8,10})', url)
         return match_result.group(1)
 
 

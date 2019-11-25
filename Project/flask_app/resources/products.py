@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from extensions import mysql
 from common.scrapers import make_scrapper
-from common.utils import error_resp
+from common.utils import error_resp, add_comment, get_comment
 from pymysql.err import OperationalError
 
 product_parser = reqparse.RequestParser()
@@ -87,7 +87,8 @@ class TrackProduct(Resource):
             min_url = scraper.minimal_url
 
             if None in (price, product_id, title, min_url):
-                return {'message': 'unable to obtain necessary product info'}, 422
+                return {
+                           'message': 'unable to obtain necessary product info'}, 422
 
             sql = '''
             INSERT INTO product (name, url, price, product_id, retailer) 
@@ -114,3 +115,30 @@ class TrackProduct(Resource):
                 'price': price,
                 'link': min_url,
                 'new_item': is_new}, code
+
+
+class NewComments(Resource):
+    comments_parser = reqparse.RequestParser()
+    comments_parser.add_argument('comment', help='comment field required',
+                                 required=True)
+    comments_parser.add_argument('retailer')
+    comments_parser.add_argument('product_id')
+
+    @jwt_required
+    def post(self):
+        args = self.comments_parser.parse_args()
+        current_user = get_jwt_identity()
+        retailer = args['retailer']
+        product_id = args['product_id']
+        comment = args['comment']
+
+        db = mysql.get_db()
+        resp = add_comment(db, current_user, retailer, product_id, comment)
+        return resp
+
+
+class GetComments(Resource):
+    def get(self, retailer, prod_id):
+        db = mysql.get_db()
+        return get_comment(db, retailer, prod_id)
+
