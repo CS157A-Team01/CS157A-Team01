@@ -1,8 +1,8 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from extensions import mysql
-from common.scrapers import AmazonScraper
-from common.utils import which_retailer, error_resp
+from common.scrapers import make_scrapper
+from common.utils import error_resp
 from pymysql.err import OperationalError
 
 product_parser = reqparse.RequestParser()
@@ -50,15 +50,13 @@ class TrackProduct(Resource):
         args = product_parser.parse_args()
         current_user_id = get_jwt_identity()
         url = args['url']
-        retailer = which_retailer(url)
-        scraper = None
         is_new = False  # flag if product is not already in db
 
-        if not retailer:
-            return {'message': 'link not supported'}, 400
-        if retailer == 'amazon':
-            scraper = AmazonScraper(url)
+        scraper = make_scrapper(url)
+        if not scraper:
+            return error_resp('url not supported', 400)
 
+        retailer = scraper.retailer
         product_id = scraper.get_id_from_url()
 
         cursor = mysql.get_db().cursor()
