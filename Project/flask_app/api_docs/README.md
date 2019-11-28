@@ -13,6 +13,7 @@ Open endpoints require no Authentication.
 * [Login](login.md) : `POST /api/login`
 * [Register](register.md) : `POST /api/register`
 * [Revoke tokens (logout)](revoke_access.md) : `DELETE /api/revoke`
+* [Get comments](get_comments.md) `GET /api/comment/<retailer>/<product id>`
 
 ## Endpoints that require Authentication
 
@@ -32,4 +33,5 @@ prevent CSRF attacks.
 * [Refresh access token](refresh_access.md) : `POST /api/refresh`
 * [Add product to tracking](add_tracking.md) : `POST /api/product`
 * [Get current user's track list](get_tracking.md) : `GET /api/product`
+* [Add comment to product](add_comment.md) : `POST /api/comment`
 
