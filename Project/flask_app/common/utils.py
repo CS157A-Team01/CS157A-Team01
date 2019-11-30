@@ -274,3 +274,24 @@ def update_desired_price(db_con, user, retailer, product_id, price):
                           'retailer': retailer,
                           'product_id': product_id,
                           'price': price})
+
+
+def remove_tracking(db_con, user, retailer, product_id):
+    cursor = db_con.cursor()
+    sql = '''
+    DELETE FROM product_tracked_by_user
+    WHERE user_id=%s AND retailer=%s AND product_id=%s
+    '''
+    try:
+        row = cursor.execute(sql, (user, retailer, product_id))
+        if not row:
+            return make_response({'message': 'product currently not tracked'},
+                                 400)
+        db_con.commit()
+    except OperationalError as e:
+        print(e)
+        return abort(500)
+
+    return make_response({'message': 'product removed from tracking',
+                          'retailer': retailer,
+                          'product_id': product_id})

@@ -34,5 +34,6 @@ prevent CSRF attacks.
 * [Add product to tracking](add_tracking.md) : `POST /api/product`
 * [Get current user's track list](get_tracking.md) : `GET /api/product`
 * [Update product price](update_tracking.md) : `PUT /api/product`
+* [Delete product from tracking](delete_tracking.md) : `DELETE /api/product`
 * [Add comment to product](add_comment.md) : `POST /api/comment`
 

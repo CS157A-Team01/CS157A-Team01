@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from extensions import mysql
 from common.scrapers import make_scrapper
 from common.utils import (error_resp, add_comment, get_comment,
-                          update_desired_price)
+                          update_desired_price, remove_tracking)
 from pymysql.err import OperationalError
 
 product_parser = reqparse.RequestParser()
@@ -23,6 +23,8 @@ class TrackProduct(Resource):
     update_parser.add_argument('price', required=True,
                                help='price field required',
                                type=float)
+    delete_parser = update_parser.copy()
+    delete_parser.remove_argument('price')
 
     @jwt_required
     def get(self):
@@ -137,6 +139,14 @@ class TrackProduct(Resource):
 
         resp = update_desired_price(db_con, user, retailer, product_id, price)
         return resp
+
+    @jwt_required
+    def delete(self):
+        args = self.delete_parser.parse_args()
+        user = get_jwt_identity()
+        retailer = args['retailer']
+        product_id = args['product_id']
+        return remove_tracking(mysql.get_db(), user, retailer, product_id)
 
 
 class NewComments(Resource):
