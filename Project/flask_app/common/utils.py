@@ -252,3 +252,25 @@ def get_comment(db, retailer, prod_id):
             "date": date.strftime("%m/%d/%y %H:%M")
         })
     return comments
+
+
+def update_desired_price(db_con, user, retailer, product_id, price):
+    cursor = db_con.cursor()
+    sql = '''
+    UPDATE product_tracked_by_user
+    SET desired_price = %s
+    WHERE user_id = %s AND retailer = %s AND product_id = %s
+    '''
+    try:
+        row = cursor.execute(sql, (price, user, retailer, product_id))
+        if not row:
+            return make_response({'message': 'Fail to update'}, 400)
+        db_con.commit()
+    except OperationalError as e:
+        print(e)
+        return abort(500)
+
+    return make_response({'message': 'price updated',
+                          'retailer': retailer,
+                          'product_id': product_id,
+                          'price': price})
