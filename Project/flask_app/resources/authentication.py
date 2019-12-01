@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from model import temp_blacklist
 from extensions import bcrypt, mysql
-from flask import request, jsonify
+from flask import request, jsonify, abort
 from pymysql.err import OperationalError
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, jwt_refresh_token_required,
@@ -121,6 +121,83 @@ class UserLogin(Resource):
 
         return ({'message': 'incorrect userid/password combination'},
                 409)
+
+
+class AdminRegister(Resource):
+    reg_parser = reqparse.RequestParser()
+    reg_parser.add_argument('login', required=True)
+    reg_parser.add_argument('password', required=True)
+
+    def register(self, db, login, password):
+        cursor = db.cursor()
+        sql = '''
+        INSERT INTO dev.admin (admin_login, password) 
+        SELECT * FROM (SELECT %s, %s) as tmp
+        WHERE NOT EXISTS(SELECT * FROM dev.admin WHERE admin_login = %s);
+        '''
+        hash_pw = bcrypt.generate_password_hash(password.encode('utf-8'))
+        try:
+            rows = cursor.execute(sql, (login, hash_pw, login))
+            if not rows:
+                return {'message': 'admin already exist'}, 400
+            db.commit()
+        except OperationalError as e:
+            print(e)
+            return abort(500)
+
+        return {'message': 'admin registered',
+                'login_id': login}
+
+    def post(self):
+        args = self.reg_parser.parse_args()
+        username = args['login']
+        password = args['password']
+
+        return self.register(mysql.get_db(), username, password)
+
+
+class AdminLogin(Resource):
+    admin_parser = reqparse.RequestParser()
+    admin_parser.add_argument('admin_user', required=True)
+    admin_parser.add_argument('admin_password', required=True)
+
+    def login(self, db, admin, password):
+        cursor = db.cursor()
+        sql = '''
+        SELECT id, password FROM admin
+        WHERE admin_login = %s
+        '''
+        try:
+            cursor.execute(sql, (admin,))
+        except OperationalError as e:
+            print(e)
+            return abort(500)
+        result = cursor.fetchone()
+        if not result:
+            return {'message': 'Admin not exist'}, 401
+        uid, password_hash = result
+        check = bcrypt.check_password_hash(password_hash.decode('UTF-8'),
+                                           password)
+        if not check:
+            return {'message': 'incorrect admin/password combination'}, 401
+
+        access_token = create_access_token(identity={'id': uid,
+                                                     'role': 'admin'})
+        refresh_token = create_refresh_token(identity={'id': uid,
+                                                       'role': 'admin'})
+        resp_body = {'message': f'admin {admin} '
+                                f'logged in successfully'}
+
+        resp = jsonify(resp_body)
+        set_access_cookies(resp, access_token)
+        set_refresh_cookies(resp, refresh_token)
+        return resp
+
+    def post(self):
+        args = self.admin_parser.parse_args()
+        admin = args['admin_user']
+        password = args['admin_password']
+        return self.login(mysql.get_db(), admin, password)
 
 
 class TokenRefresh(Resource):

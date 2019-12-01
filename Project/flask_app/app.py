@@ -32,7 +32,8 @@ def create_app(config=None):
             return send_from_directory(new_app.template_folder, 'index.html')
 
     from resources.authentication import (UserRegistration, UserLogin,
-                                          TokenRefresh, UnsetToken)
+                                          TokenRefresh, UnsetToken,
+                                          AdminLogin, AdminRegister)
     from resources.user import GetUserInfo, UpdateUserInfo
     from resources.products import TrackProduct, NewComments, GetComments
 
@@ -45,6 +46,8 @@ def create_app(config=None):
     api.add_resource(TrackProduct, '/product')
     api.add_resource(NewComments, '/comment')
     api.add_resource(GetComments, '/comment/<string:retailer>/<string:prod_id>')
+    api.add_resource(AdminLogin, '/admin-login')
+    api.add_resource(AdminRegister, '/admin-register')
 
     api_bp = Blueprint('api', __name__)
     api.init_app(api_bp)
