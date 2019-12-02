@@ -1,37 +1,38 @@
-import React, { Component } from 'react'
-import { login } from './UserFunctions'
+import React, { Component } from "react";
+import { login } from "./UserFunctions";
 
 class Login extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
-      userid: '',
-      password: '',
+      userid: "",
+      password: "",
       errors: {}
-    }
+    };
 
-    this.onChange = this.onChange.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value })
+    this.setState({ [e.target.name]: e.target.value });
   }
   onSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     const user = {
       userid: this.state.userid,
       password: this.state.password
-    }
+    };
 
-    login(user).then(res => {
-      this.props.history.push(`/profile`)
-    }).catch(err => {
-      console.error(err.response)
-    })
+    login(user)
+      .then(res => {
+        this.props.history.push(`/`);
+      })
+      .catch(err => {
+        console.error(err.response);
+      });
   }
-
 
   render() {
     return (
@@ -72,8 +73,8 @@ class Login extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default Login
+export default Login;

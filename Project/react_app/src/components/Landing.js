@@ -1,17 +1,15 @@
-import React, { Component } from 'react'
-
+import React, { Component } from "react";
+import Footer from "./Footer/index";
+import Navbar from "./Navbar";
 class Landing extends Component {
   render() {
     return (
-      <div className="container">
-        <div className="jumbotron mt-5">
-          <div className="col-sm-8 mx-auto">
-            <h1 className="text-center">WELCOME</h1>
-          </div>
-        </div>
+      <div>
+        <div className="page_container">{this.props.children}</div>
+        <Footer />
       </div>
-    )
+    );
   }
 }
 
-export default Landing
+export default Landing;
