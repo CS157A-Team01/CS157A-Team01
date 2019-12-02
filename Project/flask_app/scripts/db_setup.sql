@@ -43,7 +43,7 @@ PRIMARY KEY(id)
 
 CREATE TABLE IF NOT EXISTS announcement(
 id INT AUTO_INCREMENT,
-time timestamp,
+time timestamp DEFAULT CURRENT_TIMESTAMP,
 title varchar(256),
 body text,
 admin_id INT NOT NULL,

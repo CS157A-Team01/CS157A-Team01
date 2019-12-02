@@ -2,7 +2,8 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from extensions import mysql
 from common.scrapers import make_scrapper
-from common.utils import error_resp, add_comment, get_comment
+from common.utils import (error_resp, add_comment, get_comment,
+                          update_desired_price, remove_tracking)
 from pymysql.err import OperationalError
 
 product_parser = reqparse.RequestParser()
@@ -14,6 +15,17 @@ product_parser.add_argument(
 
 
 class TrackProduct(Resource):
+    update_parser = reqparse.RequestParser()
+    update_parser.add_argument('retailer', required=True,
+                               help='retailer field required')
+    update_parser.add_argument('product_id', required=True,
+                               help='product_id required')
+    update_parser.add_argument('price', required=True,
+                               help='price field required',
+                               type=float)
+    delete_parser = update_parser.copy()
+    delete_parser.remove_argument('price')
+
     @jwt_required
     def get(self):
         current_user = get_jwt_identity()
@@ -116,6 +128,26 @@ class TrackProduct(Resource):
                 'link': min_url,
                 'new_item': is_new}, code
 
+    @jwt_required
+    def put(self):
+        args = self.update_parser.parse_args()
+        user = get_jwt_identity()
+        db_con = mysql.get_db()
+        retailer = args['retailer']
+        product_id = args['product_id']
+        price = args['price']
+
+        resp = update_desired_price(db_con, user, retailer, product_id, price)
+        return resp
+
+    @jwt_required
+    def delete(self):
+        args = self.delete_parser.parse_args()
+        user = get_jwt_identity()
+        retailer = args['retailer']
+        product_id = args['product_id']
+        return remove_tracking(mysql.get_db(), user, retailer, product_id)
+
 
 class NewComments(Resource):
     comments_parser = reqparse.RequestParser()
@@ -141,4 +173,3 @@ class GetComments(Resource):
     def get(self, retailer, prod_id):
         db = mysql.get_db()
         return get_comment(db, retailer, prod_id)
-
