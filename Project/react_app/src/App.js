@@ -6,7 +6,7 @@ import RegisterLogin from "./components/Register_login";
 import Register from "./components/Register_login/register";
 import UserDashboard from "./components/User";
 import Auth from "./layout/auth";
-import UpdateProfile from "./components/User/update_profile"
+import UpdateProfile from "./components/User/update_profile";
 function App() {
   return (
     <Layout>
@@ -25,7 +25,7 @@ function App() {
         <Route
           exact
           path="/user/user_profile"
-          component={(Auth(UpdateProfile), false)}
+          component={Auth(UpdateProfile, true)}
         />
         <Route exact path="/" component={Auth(Home, null)} />
       </Switch>

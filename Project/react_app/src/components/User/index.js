@@ -1,7 +1,6 @@
 import React from "react";
 import UserLayout from "../../layout/user";
 import MyButton from "../utilis/button";
-import user_reducer from "../../reducers/user_reducer";
 
 const UserDashboard = ({ user }) => {
   return (
