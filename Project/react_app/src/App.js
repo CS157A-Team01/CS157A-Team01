@@ -1,30 +1,17 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Landing from "./components/Landing";
-import Navbar from "./components/Navbar";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Profile from "./components/Profile";
-import Product from "./components/Product";
-import UpdateProfile from "./components/UpdateProfile";
-import NotFoundPage from "./components/NotFound";
+import { Switch, Route } from "react-router-dom";
+import Layout from "./layout/Layout";
+import Home from "./components/Home";
+import RegisterLogin from "./components/Register_login";
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <Switch>
-          <Route exact path="/" component={Landing} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/profile" component={Profile} />
-          <Route exact path="/updateProfile" component={UpdateProfile} />
-          <Route exact path="/product" component={Product} />
-          <Route path="*" component={NotFoundPage} />
-        </Switch>
-      </div>
-    </Router>
+    <Layout>
+      <Switch>
+        <Route exact path="/register_login" component={RegisterLogin} />
+        <Route exact path="/" component={Home} />
+      </Switch>
+    </Layout>
   );
 }
 

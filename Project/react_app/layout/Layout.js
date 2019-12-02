@@ -1,10 +1,13 @@
 import React, { Component } from "react";
-import Footer from "./Footer/index";
-import Navbar from "./Navbar";
-class Landing extends Component {
+
+import Header from "../components/Header_footer/Header";
+import Footer from "../components/Header_footer/Footer";
+
+class Layout extends Component {
   render() {
     return (
       <div>
+        <Header />
         <div className="page_container">{this.props.children}</div>
         <Footer />
       </div>
@@ -12,4 +15,4 @@ class Landing extends Component {
   }
 }
 
-export default Landing;
+export default Layout;
