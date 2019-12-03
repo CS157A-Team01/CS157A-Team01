@@ -28,9 +28,9 @@ class product extends Component {
       const jsx = (
       <tr>
         <td>{p.retailer}</td>
-        <td>{p.title}</td>
+        <td><a href={p.url}>{p.title}</a></td>
         <td>{p.price}</td>
-        <td>{p.url}</td>
+        <td><a href={p.url}>{p.url}</a></td>
         <td>{p.desired_price}</td>
       </tr>)
       rows.push(jsx)
