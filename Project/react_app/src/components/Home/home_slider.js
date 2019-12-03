@@ -5,14 +5,14 @@ const HomeSlider = props => {
   const slides = [
     {
       img: "/images/main.jpg",
-      lineOne: "BitMe",
+      lineOne: "BeatMe",
       lineTwo: "Deal Tracker",
       linkTitle: "Register Now",
       linkTo: "/register_login"
     },
     {
       img: "/images/main2.jpg",
-      lineOne: "BitMe",
+      lineOne: "BeatMe",
       lineTwo: "Deal Tracker",
       linkTitle: "Log in",
       linkTo: "/register_login"

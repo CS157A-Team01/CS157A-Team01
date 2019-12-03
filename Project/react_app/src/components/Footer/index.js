@@ -4,6 +4,7 @@ import faCompass from "@fortawesome/fontawesome-free-solid/faCompass";
 import faPhone from "@fortawesome/fontawesome-free-solid/faPhone";
 import faClock from "@fortawesome/fontawesome-free-solid/faClock";
 import faEnvelope from "@fortawesome/fontawesome-free-solid/faEnvelope";
+import Announcement from "../Announcement";
 
 const Footer = () => {
   return (
@@ -44,9 +45,9 @@ const Footer = () => {
           </div>
         </div>
         <div className="left">
-          <h2>Be the first Customer </h2>
-          <div>
-            <div>Hello New Customer</div>
+          <h2>Announcement </h2>
+          <div className="user_product_block">
+            <Announcement />
           </div>
         </div>
       </div>

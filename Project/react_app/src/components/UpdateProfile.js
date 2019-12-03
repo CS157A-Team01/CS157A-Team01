@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { getProfile } from "./UserFunctions";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
@@ -65,6 +64,10 @@ class UpdateProfile extends Component {
     }
   }
 
+  mes() {
+    alert("User Profile Update Success");
+  }
+
   render() {
     return (
       <div className="container">
@@ -108,6 +111,7 @@ class UpdateProfile extends Component {
               <button
                 type="submit"
                 className="btn btn-lg btn-primary btn-block"
+                onClick={this.mes}
               >
                 Update
               </button>

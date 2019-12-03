@@ -36,7 +36,7 @@ class NewProduct extends Component {
               onChange={this.onChange}
             />
           </div>
-          <button type="submit" class="btn">
+          <button type="submit" class="btn btn-success">
             Submit
           </button>
         </form>

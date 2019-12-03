@@ -1,14 +1,11 @@
 import React, { Component } from "react";
 import { getComment, postComment } from "./UserFunctions";
 import { Button, Comment, Form, Header, TableBody } from "semantic-ui-react";
-import { text } from "@fortawesome/fontawesome";
 
 class Comments extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      retailer: "",
-      id: "",
       retailer: props.match.params.retailer,
       id: props.match.params.id,
       comment: [],

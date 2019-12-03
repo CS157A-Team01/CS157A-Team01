@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { getProduct } from "./UserFunctions";
 import NewProduct from "./NewProduct";
 
-class product extends Component {
+class Product extends Component {
   constructor() {
     super();
     this.state = {
@@ -43,34 +43,38 @@ class product extends Component {
             <a href={p.url}>{p.url}</a>
           </td>
           <td>{p.desired_price}</td>
+          <th>
+            <button className="btn btn-danger">Remove</button>
+          </th>
         </tr>
       );
       rows.push(jsx);
     }
     return (
       <div className="container">
-        <strong className="ml-3">Please Add Product Link Below</strong>
+        <h1>
+          <strong className="ml-3">Please Add Product Link Below</strong>
+        </h1>
         <NewProduct />
-        <div className="jumbotron mt-5">
-          <div className="col-sm-8 mx-auto">
-            <h1 className="text-center">Product Tracking</h1>
-          </div>
-          <table className="table c0l-md-6 mx-auto">
-            <tbody>
-              <tr>
-                <td>Retailer</td>
-                <td>Title</td>
-                <td>Price</td>
-                <td>Link</td>
-                <td>Desired Price</td>
-              </tr>
-              {rows}
-            </tbody>
-          </table>
+        <div className="col-sm-8 mx-auto">
+          <h1 className="text-center">Product Tracking</h1>
         </div>
+        <table className="table col-md-10 mx-auto">
+          <tbody>
+            <tr>
+              <th className="text-center">Retailer</th>
+              <th className="text-center">Title</th>
+              <th className="text-center">Price</th>
+              <th className="text-center">Link</th>
+              <th className="text-center">Desired Price</th>
+              <th className="text-center">Delete</th>
+            </tr>
+            {rows}
+          </tbody>
+        </table>
       </div>
     );
   }
 }
 
-export default product;
+export default Product;

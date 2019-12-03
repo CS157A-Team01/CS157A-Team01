@@ -34,6 +34,10 @@ class Login extends Component {
       });
   }
 
+  mes() {
+    alert("Login Success!")
+  }
+
   render() {
     return (
       <div className="container">
@@ -66,6 +70,7 @@ class Login extends Component {
               <button
                 type="submit"
                 className="btn btn-lg btn-primary btn-block"
+                onClick={this.mes}
               >
                 Sign in
               </button>

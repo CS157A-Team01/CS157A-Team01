@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import Button from "react-bootstrap/Button";
 import { logout } from "./UserFunctions";
 import Cookies from "universal-cookie";
 
@@ -26,12 +23,12 @@ class Landing extends Component {
       <ul className="navbar-nav">
         <li className="nav-item">
           <Link to="/login" className="nav-link">
-            Login
+            <h2>Login</h2>
           </Link>
         </li>
         <li className="nav-item">
           <Link to="/register" className="nav-link">
-            Register
+            <h2>Register</h2>
           </Link>
         </li>
       </ul>
@@ -40,49 +37,35 @@ class Landing extends Component {
     const userLink = (
       <ul className="navbar-nav">
         <li className="nav-item">
-          <Link to="/profile" className="nav-link">
-            User
+          <Link to="/dashboard" className="nav-link">
+            <h2>My Account</h2>
           </Link>
         </li>
         <li className="nav-item">
           <Link to="/product" className="nav-link">
-            Tracking
+            <h2>Tracking</h2>
           </Link>
         </li>
         <li className="nav-item">
           <a href="" onClick={this.logoutUser.bind(this)} className="nav-link">
-            Logout
+            <h2>Logout</h2>
           </a>
         </li>
       </ul>
     );
 
     return (
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+      <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
         <Navbar.Brand>
           <Link to="/" className="nav-link">
-            BeatMeLOGO
+            <h1>
+              <div className="logo">BeatMe</div>
+            </h1>
           </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mx-auto">
-            <InputGroup style={{ width: "50vw" }}>
-              <FormControl
-                placeholder="Paste link here"
-                aria-label="Production"
-                aria-describedby="basic-addon2"
-              />
-              <InputGroup.Append>
-                <Button variant="outline-secondary">
-                  <i
-                    className="fas fa-search-dollar"
-                    style={{ color: "white" }}
-                  ></i>
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
-          </Nav>
+          <Nav className="mx-auto"></Nav>
           <Nav>
             <Nav.Link>
               {cookie.get("csrf_access_token") ? userLink : loginRegLink}

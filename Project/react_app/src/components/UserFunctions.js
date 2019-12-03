@@ -32,7 +32,6 @@ export const login = user => {
 };
 
 export const addProduct = async (url, price) => {
-  console.log(url, price);
   return await axios.post(
     "/api/product",
     {
@@ -52,6 +51,19 @@ export const getProfile = async () => {
     withCredentials: true
   });
   return response.data;
+};
+
+export const deleteEmail = async email => {
+  const response = await axios.delete(
+    "/api/user/email",
+    {
+      email: email
+    },
+    {
+      headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
+      withCredentials: true
+    }
+  );
 };
 
 export const getProduct = async () => {
@@ -83,9 +95,14 @@ export const postComment = async (comment, retailer, id) => {
   return response;
 };
 
+export const getAnnounce = async () => {
+  const response = await axios.get(`/api/announcement`);
+  return await response.data;
+};
+
 export const logout = async () => {
-  const resp = await axios.delete("/api/revoke", {
+  const response = await axios.delete("/api/revoke", {
     withCredentials: true
   });
-  return await resp.data;
+  return await response.data;
 };
