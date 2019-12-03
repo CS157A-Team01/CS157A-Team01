@@ -59,12 +59,12 @@ export const getProduct = async () => {
     headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
     withCredentials: true
   });
-  return response.data;
+  return await response.data;
 };
 
 export const logout = async () => {
   const resp = await axios.delete("/api/revoke", {
     withCredentials: true
   });
-  return resp.data;
+  return await resp.data;
 };

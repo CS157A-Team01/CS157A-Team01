@@ -5,30 +5,36 @@ class product extends Component {
   constructor() {
     super();
     this.state = {
-      retailer: "",
-      title: "",
-      url: "",
-      price: "",
-      desired_price: ""
+      product: []
     };
   }
   componentDidMount() {
     getProduct()
-      .then(data =>
+      .then(data => {
+        console.log(data)
         this.setState({
-          retailer: data.retailer,
-          title: data.title,
-          url: data.url,
-          price: data.price,
-          desired_price: data.desired_price
+          product: data
         })
-      )
+      })
       .catch(err => {
         console.log(err.response.data);
       });
   }
 
   render() {
+    const rows = []
+    for (let i = 0; i < this.state.product.length; i++){
+      const p = this.state.product[i]
+      const jsx = (
+      <tr>
+        <td>{p.retailer}</td>
+        <td>{p.title}</td>
+        <td>{p.price}</td>
+        <td>{p.url}</td>
+        <td>{p.desired_price}</td>
+      </tr>)
+      rows.push(jsx)
+    }
     return (
       <div className="container">
         <div className="jumbotron mt-5">
@@ -39,24 +45,12 @@ class product extends Component {
             <tbody>
               <tr>
                 <td>Retailer</td>
-                <td>{this.state.retailer}</td>
-              </tr>
-              <tr>
-                <td>title</td>
-                <td>{this.state.title}</td>
-              </tr>
-              <tr>
-                <td>URL</td>
-                <td>{this.state.URL}</td>
-              </tr>
-              <tr>
+                <td>Title</td>
                 <td>Price</td>
-                <td>{this.state.Price}</td>
-              </tr>
-              <tr>
+                <td>Link</td>
                 <td>Desired Price</td>
-                <td>{this.state.desired_price}</td>
               </tr>
+              {rows}
             </tbody>
           </table>
         </div>
