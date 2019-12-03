@@ -36,7 +36,6 @@ class UpdateProfile extends Component {
       .then(data =>
         this.setState({
           username: data.username,
-          password: data.hashed_password,
           primary_email: data.primary_email
         })
       )
