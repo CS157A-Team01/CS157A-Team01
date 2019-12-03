@@ -12,7 +12,6 @@ class Product extends Component {
   componentDidMount() {
     getProduct()
       .then(data => {
-        console.log(data);
         this.setState({
           product: data
         });

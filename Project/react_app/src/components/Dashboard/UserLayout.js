@@ -29,6 +29,16 @@ const UserLayout = props => {
         <div className="user_left_nav">
           <h2>My account</h2>
           <div className="links">{generateLinks(links)}</div>
+          <br />
+          <div>
+            <h2>Online shop</h2>
+            <div className="links">
+              <a href="www.amazon.com">Amazon</a>
+            </div>
+            <div className="links">
+              <a href="www.walmart.com">Walmart</a>
+            </div>
+          </div>
         </div>
         <div className="user_right">{props.children}</div>
       </div>

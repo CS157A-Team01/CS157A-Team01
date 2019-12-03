@@ -47,7 +47,7 @@ class Profile extends Component {
         continue;
       }
       const jsx = (
-        <tr>
+        <tr className="text-center">
           <td>{p.email}</td>
           <td>
             <form onSubmit={this.onSubmit}>
