@@ -7,6 +7,8 @@ import urllib.parse
 
 def make_scrapper(url):
     parsed_url = urllib.parse.urlparse(url)
+    if not parsed_url.hostname:
+        return
 
     if 'amazon.com' in parsed_url.hostname:
         return AmazonScraper(url)
@@ -18,7 +20,7 @@ def make_scrapper(url):
 
 class BaseScraper:
     def __init__(self, url,
-                 UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0'):
+                 UA='Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.85 Safari/537.36 '):
         self.url = url
         self.header = {
             "User-Agent": UA
@@ -43,14 +45,14 @@ class AmazonScraper(BaseScraper):
 
     def scrape(self):
         url = self.url.split('?')[0]
+        session = requests.Session()
         try:
-            resp = requests.get(url, headers=self.header).content
+            resp = session.get(url, headers=self.header).content
         except ConnectionError:
             return
         soup = BeautifulSoup(resp, 'lxml')
-
         self.title = soup.find(id='productTitle')
-        self.product_id = soup.find('input', id='ASIN').get('value', None)
+        self.product_id = self.get_id_from_url()
         regex = re.compile(r'priceblock_.+')
         price = soup.find('span', id=regex)
         if not price:
@@ -117,8 +119,7 @@ class WalmartScraper(BaseScraper):
 
 
 def test():
-    amazon_url = 'https://www.amazon.com/PlayStation-4-Slim-1TB-Console/dp' \
-                 '/B071CV8CG2/ref=sr_1_2?keywords=ps4&qid=1572334926&sr=8-2&th=1'
+    amazon_url = 'https://www.amazon.com/KODAK-Film-Scan-Tool-MAC/dp/B07X3LYQFX?ref_=Oct_DLandingS_D_c126802e_63&smid=A2LM6ZPY06LT1N'
     amazon_scraper = AmazonScraper(amazon_url)
 
     amazon_scraper.scrape()
@@ -141,4 +142,4 @@ def test_walmart():
 
 
 if __name__ == '__main__':
-    test_walmart()
+    test()

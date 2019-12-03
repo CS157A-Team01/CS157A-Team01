@@ -12,8 +12,7 @@ Add new product to be track by current user
 
 ```json
 {
-    "url": "[url of the product]",
-    "price": "[desired price of the product]"
+    "url": "[url of the product]"
 }
 ```
 
@@ -21,8 +20,7 @@ Add new product to be track by current user
 
 ```json
 {
-    "url": "https://www.amazon.com/VIZ-PRO-Magnetic-Inches-Silver-Aluminium/dp/B00U398RDU/ref=sr_1_5?crid=1X7H3CNBA00XF&keywords=white+board&qid=1571796358&sprefix=white+bo%2Caps%2C237&sr=8-5",
-    "price": "100.05"
+    "url": "https://www.amazon.com/VIZ-PRO-Magnetic-Inches-Silver-Aluminium/dp/B00U398RDU/ref=sr_1_5?crid=1X7H3CNBA00XF&keywords=white+board&qid=1571796358&sprefix=white+bo%2Caps%2C237&sr=8-5"
 }
 ```
 
