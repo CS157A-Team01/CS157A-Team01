@@ -39,27 +39,33 @@ export const getProfile = async () => {
   return response.data;
 };
 
-export const updateProfile = user => {
-  return axios
-    .put("/api/user/username", {
-      username: user.username
-    })
-    .put("api/user/password", {
-      password: user.password
-    })
-    .then(response => {
-      if (response.status == 200) {
-        return response.data;
-      }
-    });
-};
-
 export const getProduct = async () => {
   const response = await axios.get("/api/product", {
     headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
     withCredentials: true
   });
   return await response.data;
+};
+
+export const getComment = async (retailer, id) => {
+  const response = await axios.get(`/api/comment/${retailer}/${id}`);
+  return await response.data;
+};
+
+export const postComment = async (comment, retailer, id) => {
+  const response = await axios.post(
+    "/api/comment",
+    {
+      comment: comment,
+      retailer: retailer,
+      product_id: id
+    },
+    {
+      headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
+      withCredentials: true
+    }
+  );
+  return response;
 };
 
 export const logout = async () => {

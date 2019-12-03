@@ -7,9 +7,7 @@ class Profile extends Component {
     super();
     this.state = {
       username: "",
-      new_password: "",
-      old_password: "",
-      email: "",
+      all_email: "",
       primary_email: ""
     };
   }
@@ -19,8 +17,8 @@ class Profile extends Component {
       .then(data =>
         this.setState({
           username: data.username,
-          password: data.hashed_password,
-          primary_email: data.primary_email
+          primary_email: data.primary_email,
+          all_email: data.all_email
         })
       )
       .catch(err => {
@@ -29,6 +27,19 @@ class Profile extends Component {
   }
 
   render() {
+    const rows = [];
+    for (let i = 0; i < this.state.all_email.length; i++) {
+      const p = this.state.all_email[i];
+      if (p.email === this.state.primary_email) {
+        continue;
+      }
+      const jsx = (
+        <tr>
+          <td>{p.email}</td>
+        </tr>
+      );
+      rows.push(jsx);
+    }
     return (
       <div className="container">
         <div className="jumbotron mt-5">
@@ -44,6 +55,10 @@ class Profile extends Component {
               <tr>
                 <td>Primary Email</td>
                 <td>{this.state.primary_email}</td>
+              </tr>
+              <tr>
+                <td>Secondary Email</td>
+                <td>{rows}</td>
               </tr>
             </tbody>
           </table>

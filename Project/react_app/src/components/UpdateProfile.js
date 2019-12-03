@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import { getProfile } from "./UserFunctions";
+import axios from "axios";
+import Cookies from "universal-cookie";
+
+const cookie = new Cookies();
 
 class UpdateProfile extends Component {
   constructor() {
@@ -7,9 +11,7 @@ class UpdateProfile extends Component {
     this.state = {
       username: "",
       new_password: "",
-      password: "",
-      email: "",
-      primary_email: ""
+      email: ""
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -22,26 +24,45 @@ class UpdateProfile extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    const user = {
-      username: this.state.username,
-      password: this.state.password,
-      new_password: this.state.new_password,
-      email: this.state.email,
-      primary_email: this.state.primary_email
-    };
-  }
-
-  componentDidMount() {
-    getProfile()
-      .then(data =>
-        this.setState({
-          username: data.username,
-          primary_email: data.primary_email
-        })
-      )
-      .catch(err => {
-        console.log(err.response.data);
-      });
+    if (this.state.username !== "") {
+      axios
+        .put(
+          "api/user/username",
+          {
+            new_username: this.state.username
+          },
+          { headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` } }
+        )
+        .catch(err => console.log(err.response));
+    }
+    if (this.state.email !== "") {
+      axios
+        .post(
+          "api/user/email",
+          {
+            email: this.state.email
+          },
+          {
+            headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
+            withCredentials: true
+          }
+        )
+        .catch(err => console.log(err.response));
+    }
+    if (this.state.new_password !== "") {
+      axios
+        .put(
+          "api/user/password",
+          {
+            new_password: this.state.new_password
+          },
+          {
+            headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
+            withCredentials: true
+          }
+        )
+        .catch(err => console.log(err.response));
+    }
   }
 
   render() {
@@ -52,45 +73,24 @@ class UpdateProfile extends Component {
             <form noValidate onSubmit={this.onSubmit}>
               <h1 className="h3 mb-3 font-weight-normal">Update Profile</h1>
               <div className="form-group">
-                <label htmlFor="username">User name</label>
+                <label htmlFor="username">New User Name</label>
                 <input
                   type="username"
                   className="form-control"
                   name="username"
-                  placeholder="Enter username"
+                  placeholder="Enter New Username"
                   value={this.state.username}
                   onChange={this.onChange}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email">primary_email address</label>
+                <label htmlFor="email">Email address</label>
                 <input
                   type="email"
                   className="form-control"
                   name="email"
                   placeholder="Enter email"
-                  value={this.state.primary_email}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">New Email address</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  name="new_email"
-                  placeholder="Enter email"
                   value={this.state.email}
-                  onChange={this.onChange}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="password">Old Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  placeholder="Password"
-                  value={this.state.password}
                   onChange={this.onChange}
                 />
               </div>
