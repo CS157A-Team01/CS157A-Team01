@@ -9,9 +9,6 @@ from pymysql.err import OperationalError
 product_parser = reqparse.RequestParser()
 product_parser.add_argument(
     "url", help="url field required", required=True)
-product_parser.add_argument(
-    "price", help="price field required", default=None, type=float
-)
 
 
 class TrackProduct(Resource):
@@ -32,7 +29,8 @@ class TrackProduct(Resource):
         try:
             cursor = mysql.get_db().cursor()
             sql = '''
-            SELECT name, url, price, desired_price, product.retailer
+            SELECT product.product_id, name, url, price, desired_price, 
+            product.retailer
             FROM product JOIN product_tracked_by_user
             ON product.product_id = product_tracked_by_user.product_id 
             and product.retailer = product_tracked_by_user.retailer
@@ -48,8 +46,9 @@ class TrackProduct(Resource):
         if not results:
             return resp
         for result in results:
-            name, url, price, desired_price, retailer = result
-            temp = {'retailer': retailer,
+            pid, name, url, price, desired_price, retailer = result
+            temp = {'id': pid,
+                    'retailer': retailer,
                     'title': name,
                     'url': url,
                     'price': price, 'desired_price': desired_price}
@@ -99,8 +98,11 @@ class TrackProduct(Resource):
             min_url = scraper.minimal_url
 
             if None in (price, product_id, title, min_url):
+                for p in (price, product_id, title, min_url):
+                    print(p)
                 return {
-                           'message': 'unable to obtain necessary product info'}, 422
+                           'message': 'unable to obtain necessary product ' \
+                                      'info'}, 422
 
             sql = '''
             INSERT INTO product (name, url, price, product_id, retailer) 
@@ -110,7 +112,7 @@ class TrackProduct(Resource):
         else:
             price, title, min_url = result
 
-        desired_price = args.get('price', price * 0.9)
+        desired_price = price * 0.9
 
         # add product to user's track list
         sql = '''
