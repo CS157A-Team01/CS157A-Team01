@@ -31,6 +31,21 @@ export const login = user => {
     });
 };
 
+export const addProduct = async (url, price) => {
+  console.log(url, price);
+  return await axios.post(
+    "/api/product",
+    {
+      url: url,
+      price: price
+    },
+    {
+      headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
+      withCredentials: true
+    }
+  );
+};
+
 export const getProfile = async () => {
   const response = await axios.get("/api/user", {
     headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },

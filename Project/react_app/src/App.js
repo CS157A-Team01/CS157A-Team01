@@ -9,6 +9,7 @@ import UpdateProfile from "./components/UpdateProfile";
 import Home from "./components/Home/index";
 import Comments from "./components/Comments";
 import NotFoundPage from "./components/NotFound";
+import newProduct from "./components/NewProduct";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
           <Route exact path="/updateProfile" component={UpdateProfile} />
           <Route exact path="/product" component={Product} />
           <Route exact path="/comment/:retailer/:id" component={Comments} />
+
+          <Route exact path="/test" component={newProduct} />
           <Route path="*" component={NotFoundPage} />
         </Switch>
       </Landing>

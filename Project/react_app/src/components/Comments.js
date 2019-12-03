@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { getComment, postComment } from "./UserFunctions";
-import { Button, Comment, Form, Header } from "semantic-ui-react";
+import { Button, Comment, Form, Header, TableBody } from "semantic-ui-react";
 import { text } from "@fortawesome/fontawesome";
 
 class Comments extends Component {
@@ -66,7 +66,13 @@ class Comments extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-6"></div>
+          <div className="col-6">
+            <table>
+              <TableBody>
+                <td>Product Info Goes Here</td>
+              </TableBody>
+            </table>
+          </div>
           <div className="col-6">
             <Header as="h3" dividing>
               Comments
