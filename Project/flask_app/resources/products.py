@@ -32,7 +32,8 @@ class TrackProduct(Resource):
         try:
             cursor = mysql.get_db().cursor()
             sql = '''
-            SELECT name, url, price, desired_price, product.retailer
+            SELECT product.product_id, name, url, price, desired_price, 
+            product.retailer
             FROM product JOIN product_tracked_by_user
             ON product.product_id = product_tracked_by_user.product_id 
             and product.retailer = product_tracked_by_user.retailer
@@ -48,8 +49,9 @@ class TrackProduct(Resource):
         if not results:
             return resp
         for result in results:
-            name, url, price, desired_price, retailer = result
-            temp = {'retailer': retailer,
+            pid, name, url, price, desired_price, retailer = result
+            temp = {'id': pid,
+                    'retailer': retailer,
                     'title': name,
                     'url': url,
                     'price': price, 'desired_price': desired_price}
