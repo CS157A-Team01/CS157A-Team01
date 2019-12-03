@@ -7,15 +7,16 @@ import Register from "./components/Register";
 import Profile from "./components/Profile";
 import Product from "./components/Product";
 import UpdateProfile from "./components/UpdateProfile";
+import Home from "./components/Home/index";
 import NotFoundPage from "./components/NotFound";
 
 function App() {
   return (
     <Router>
-      <div className="App">
-        <Navbar />
+      <Landing>
         <Switch>
-          <Route exact path="/" component={Landing} />
+          <Route exact path="/" component={Home} />
+          <Route exact path="/dashboard" component={Product} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/profile" component={Profile} />
@@ -23,7 +24,7 @@ function App() {
           <Route exact path="/product" component={Product} />
           <Route path="*" component={NotFoundPage} />
         </Switch>
-      </div>
+      </Landing>
     </Router>
   );
 }

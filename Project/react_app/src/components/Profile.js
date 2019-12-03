@@ -41,7 +41,6 @@ class Profile extends Component {
                 <td>Username</td>
                 <td>{this.state.username}</td>
               </tr>
-
               <tr>
                 <td>Primary Email</td>
                 <td>{this.state.primary_email}</td>
