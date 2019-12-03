@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { getProfile } from "./UserFunctions";
+import { getProfile, deleteEmail } from "./UserFunctions";
 
 class Profile extends Component {
   constructor() {
@@ -10,6 +10,19 @@ class Profile extends Component {
       all_email: "",
       primary_email: ""
     };
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+  onChange(e) {
+    this.setState({ primary_email: e.target.value });
+  }
+
+  onSubmit(e) {
+    this.setState({ url: e.target.value });
+    e.preventDefault();
+    deleteEmail(this.state.url, this.state.price).catch(err =>
+      console.log(err.response)
+    );
   }
 
   componentDidMount() {
@@ -36,6 +49,13 @@ class Profile extends Component {
       const jsx = (
         <tr>
           <td>{p.email}</td>
+          <td>
+            <form onSubmit={this.onSubmit}>
+              <button className="link_default" onClick={this.onChange}>
+                del
+              </button>
+            </form>
+          </td>
         </tr>
       );
       rows.push(jsx);

@@ -30,21 +30,23 @@ class Product extends Component {
       const id = url_split[url_split.length - 1];
       const jsx = (
         <tr>
-          <td>{p.retailer}</td>
+          <td className="text-center">{p.retailer}</td>
           <td
             onClick={() =>
               this.props.history.push(`/comment/${p.retailer}/${id}`)
             }
           >
-            <a href="">{p.title}</a>
+            <a className="text-center" href="">
+              {p.title}
+            </a>
           </td>
-          <td>{p.price}</td>
+          <td className="text-center">{p.price}</td>
           <td>
             <a href={p.url}>{p.url}</a>
           </td>
-          <td>{p.desired_price}</td>
-          <th>
-            <button className="btn btn-danger">Remove</button>
+          <td className="text-center">{p.desired_price}</td>
+          <th className="text-center">
+            <button className="btn btn-danger ">Remove</button>
           </th>
         </tr>
       );
@@ -59,7 +61,7 @@ class Product extends Component {
         <div className="col-sm-8 mx-auto">
           <h1 className="text-center">Product Tracking</h1>
         </div>
-        <table className="table col-md-10 mx-auto">
+        <table className="fixed_header mx-auto">
           <tbody>
             <tr>
               <th className="text-center">Retailer</th>

@@ -64,6 +64,7 @@ export const deleteEmail = async email => {
       withCredentials: true
     }
   );
+  return response;
 };
 
 export const getProduct = async () => {
@@ -72,6 +73,21 @@ export const getProduct = async () => {
     withCredentials: true
   });
   return await response.data;
+};
+
+export const deleteProduct = async (retailer, product_id) => {
+  const response = await axios.delete(
+    "/api/product",
+    {
+      retailer: retailer,
+      product_id: product_id
+    },
+    {
+      headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
+      withCredentials: true
+    }
+  );
+  return response;
 };
 
 export const getComment = async (retailer, id) => {

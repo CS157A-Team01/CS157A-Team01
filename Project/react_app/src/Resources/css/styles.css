@@ -778,11 +778,11 @@ footer .business_nfo .nfo {
 }
 
 .user_container .user_nfo_panel h2 {
-    margin: 0 0 20px 0;
-    line-height: 32px;
-    text-transform: uppercase;
-    font-size: 18px;
-  }
+  margin: 0 0 20px 0;
+  line-height: 32px;
+  text-transform: uppercase;
+  font-size: 18px;
+}
 
 .user_container .user_nfo_panel span {
   display: block;
@@ -879,4 +879,33 @@ footer .business_nfo .nfo {
   background-size: contain !important;
   background-position: center center !important;
   border: 1px solid #eaeaea;
+}
+
+.fixed_header {
+  width: 500x;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.fixed_header tbody {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  height: 100%;
+}
+
+.fixed_header thead tr {
+  display: block;
+}
+
+.fixed_header thead {
+  background: black;
+  color: #fff;
+}
+
+.fixed_header th,
+.fixed_header td {
+  padding: 5px;
+  text-align: left;
+  width: 200px;
 }

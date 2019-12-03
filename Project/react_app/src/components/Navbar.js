@@ -22,6 +22,11 @@ class Landing extends Component {
     const loginRegLink = (
       <ul className="navbar-nav">
         <li className="nav-item">
+          <Link to="/" className="nav-link">
+            <h2>Home</h2>
+          </Link>
+        </li>
+        <li className="nav-item">
           <Link to="/login" className="nav-link">
             <h2>Login</h2>
           </Link>
