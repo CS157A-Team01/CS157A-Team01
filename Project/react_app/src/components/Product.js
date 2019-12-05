@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getProduct } from "./UserFunctions";
+import { getProduct, deleteProduct } from "./UserFunctions";
 import NewProduct from "./NewProduct";
 
 class Product extends Component {
@@ -8,7 +8,22 @@ class Product extends Component {
     this.state = {
       product: []
     };
+    this.onClick = this.onClick.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
+  onClick(e, retailer, product_id) {
+    e.preventDefault();
+    console.log(retailer, product_id);
+    deleteProduct(this.state.retailer, this.state.product_id).catch(err =>
+      console.log(err.response)
+    );
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+    this.setState({ retailer: e.target.value });
+  }
+
   componentDidMount() {
     getProduct()
       .then(data => {
@@ -45,7 +60,16 @@ class Product extends Component {
           </td>
           <td className="text-center">{p.desired_price}</td>
           <th className="text-center">
-            <button className="btn btn-danger ">Remove</button>
+            <form onSubmit={this.onSubmit}>
+              <button
+                className="btn btn-danger"
+                onClick={e => {
+                  this.onClick(e, p.title);
+                }}
+              >
+                Remove
+              </button>
+            </form>
           </th>
         </tr>
       );

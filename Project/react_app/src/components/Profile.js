@@ -7,32 +7,38 @@ class Profile extends Component {
     super();
     this.state = {
       username: "",
-      all_email: "",
-      primary_email: ""
+      all_email: [],
+      primary_email: "",
+      delete: ""
     };
-    this.onChange = this.onChange.bind(this);
+    this.onClick = this.onClick.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
-  onChange(e) {
-    this.setState({ primary_email: e.target.value });
+
+  onClick(e, email) {
+    e.preventDefault();
+    console.log(email);
+    deleteEmail(email).catch(err => console.log(err.response));
   }
 
   onSubmit(e) {
-    this.setState({ url: e.target.value });
     e.preventDefault();
-    deleteEmail(this.state.url, this.state.price).catch(err =>
-      console.log(err.response)
-    );
+    this.setState({ all_email: e.target.value });
   }
 
   componentDidMount() {
     getProfile()
       .then(data =>
-        this.setState({
-          username: data.username,
-          primary_email: data.primary_email,
-          all_email: data.all_email
-        })
+        this.setState(
+          {
+            username: data.username,
+            primary_email: data.primary_email,
+            all_email: data.all_email
+          },
+          () => {
+            console.log(this.state);
+          }
+        )
       )
       .catch(err => {
         console.log(err.response.data);
@@ -51,7 +57,12 @@ class Profile extends Component {
           <td>{p.email}</td>
           <td>
             <form onSubmit={this.onSubmit}>
-              <button className="link_default" onClick={this.onChange}>
+              <button
+                className="link_default"
+                onClick={e => {
+                  this.onClick(e, p.email);
+                }}
+              >
                 del
               </button>
             </form>

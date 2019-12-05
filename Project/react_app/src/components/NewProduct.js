@@ -6,7 +6,7 @@ class NewProduct extends Component {
     super();
     this.state = {
       url: "",
-      price: 10
+      price: ""
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
