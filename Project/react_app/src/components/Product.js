@@ -14,9 +14,7 @@ class Product extends Component {
   onClick(e, retailer, product_id) {
     e.preventDefault();
     console.log(retailer, product_id);
-    deleteProduct(this.state.retailer, this.state.product_id).catch(err =>
-      console.log(err.response)
-    );
+    deleteProduct(retailer, product_id).catch(err => console.log(err.response));
   }
 
   onSubmit(e) {
@@ -64,7 +62,7 @@ class Product extends Component {
               <button
                 className="btn btn-danger"
                 onClick={e => {
-                  this.onClick(e, p.title);
+                  this.onClick(e, p.retailer, p.id);
                 }}
               >
                 Remove

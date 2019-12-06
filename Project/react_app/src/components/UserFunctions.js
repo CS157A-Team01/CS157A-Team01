@@ -54,16 +54,13 @@ export const getProfile = async () => {
 };
 
 export const deleteEmail = async email => {
-  const response = await axios.delete(
-    "/api/user/email",
-    {
+  console.log(cookie.get("csrf_access_token"));
+  const response = await axios.delete("/api/user/email", {
+    headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
+    data: {
       email: email
-    },
-    {
-      headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
-      withCredentials: true
     }
-  );
+  });
   return response;
 };
 
@@ -79,14 +76,12 @@ export const deleteProduct = async (retailer, product_id) => {
   const response = await axios.delete(
     "/api/product",
     {
-      retailer: retailer,
-      product_id: product_id
-    },
-    {
       headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
-      withCredentials: true
-    }
-  );
+      data: {
+        retailer: retailer,
+        product_id: product_id
+      }
+    });
   return response;
 };
 

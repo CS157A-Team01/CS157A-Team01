@@ -33,10 +33,10 @@ const UserLayout = props => {
           <div>
             <h2>Online shop</h2>
             <div className="links">
-              <a href="www.amazon.com">Amazon</a>
+              <a href="https://www.amazon.com">Amazon</a>
             </div>
             <div className="links">
-              <a href="www.walmart.com">Walmart</a>
+              <a href="https://www.walmart.com">Walmart</a>
             </div>
           </div>
         </div>
