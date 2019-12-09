@@ -99,29 +99,7 @@ class Comments extends Component {
       const k = this.state.product[j];
       const body = (
         <tr>
-          <td className="text-center">{k.title}</td>
-          <td className="text-center">{k.url}</td>
-          <td className="text-center">{k.price}</td>
-          <td className="text-center">{k.retailer}</td>
-          <td className="text-center">{k.id}</td>
-          <td>
-            <div class="form-group row">
-              <div class="col-xs-2">
-                <input
-                  class="form-control"
-                  name="price"
-                  type="text"
-                  value={this.state.price}
-                  onChange={this.handleonChange}
-                ></input>
-              </div>
-            </div>
-          </td>
-          <td>
-            <button className="btn btn-danger" onClick={this.handleUpdate}>
-              update
-            </button>
-          </td>
+          <td claaName="text-center">{k.retailer}</td>
         </tr>
       );
       datas.push(body);
@@ -132,16 +110,41 @@ class Comments extends Component {
         <div className="row">
           <div className="col-6">
             <table>
-              <tbody>
+              <TableBody>
                 <tr>
+                  <th>Retailer</th>
                   <th>Title</th>
-                  <th>Url</th>
                   <th>Price</th>
                   <th>Desired Price</th>
                   <th>Update</th>
                 </tr>
-                {datas}
-              </tbody>
+                <tr>
+                  <td>{this.state.product.retailer}</td>
+                  <td>{this.state.product.title}</td>
+                  <td>{this.state.product.price}</td>
+                  <td>
+                    <div class="form-group row">
+                      <div class="col-xs-1">
+                        <input
+                          class="form-control"
+                          name="price"
+                          type="text"
+                          value={this.state.price}
+                          onChange={this.handleonChange}
+                        ></input>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger"
+                      onClick={this.handleUpdate}
+                    >
+                      update
+                    </button>
+                  </td>{" "}
+                </tr>
+              </TableBody>
             </table>
           </div>
           <div className="col-6">
