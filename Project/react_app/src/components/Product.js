@@ -41,7 +41,7 @@ class Product extends Component {
       const url_split = p.url.split("/");
       const id = url_split[url_split.length - 1];
       const jsx = (
-        <tr>
+        <tr style={p.price < p.desired_price?{"background-color":"greenyellow"}:null}>
           <td className="text-center">{p.retailer}</td>
           <td
             onClick={() =>
