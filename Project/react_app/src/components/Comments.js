@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { getComment, postComment } from "./UserFunctions";
 import { Button, Comment, Form, Header, TableBody } from "semantic-ui-react";
+import axios from "axios";
+import Cookies from "universal-cookie";
 
+const cookie = new Cookies();
 class Comments extends Component {
   constructor(props) {
     super(props);
@@ -9,10 +12,13 @@ class Comments extends Component {
       retailer: props.match.params.retailer,
       id: props.match.params.id,
       comment: [],
-      text: ""
+      text: "",
+      price: ""
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleonChange = this.handleonChange.bind(this);
   }
   componentDidMount() {
     getComment(this.state.retailer, this.state.id)
@@ -40,6 +46,23 @@ class Comments extends Component {
     // TODO: make component refresh right after submit
   }
 
+  handleonChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  handleUpdate(e) {
+    if (this.state.price !== "") {
+      axios
+        .put(
+          "api/product",
+          {
+            price: this.state.price
+          },
+          { headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` } }
+        )
+        .catch(err => console.log(err.response));
+    }
+  }
   render() {
     const rows = [];
     for (let i = 0; i < this.state.comment.length; i++) {
@@ -66,7 +89,28 @@ class Comments extends Component {
           <div className="col-6">
             <table>
               <TableBody>
-                <td>Product Info Goes Here</td>
+                <tr>
+                  <th>Desired Price</th>
+                  <th>Update</th>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      name="price"
+                      type="text"
+                      value={this.state.price}
+                      onChange={this.handleonChange}
+                    ></input>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger"
+                      onClick={this.handleUpdate}
+                    >
+                      update
+                    </button>
+                  </td>
+                </tr>
               </TableBody>
             </table>
           </div>
