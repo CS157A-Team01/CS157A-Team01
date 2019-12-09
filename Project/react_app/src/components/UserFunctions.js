@@ -90,6 +90,11 @@ export const getComment = async (retailer, id) => {
   return await response.data;
 };
 
+export const getCurrentProduct = async (retailer, id) => {
+  const response = await axios.get(`/api/product/${retailer}/${id}`);
+  return await response.data;
+};
+
 export const postComment = async (comment, retailer, id) => {
   const response = await axios.post(
     "/api/comment",
@@ -105,6 +110,7 @@ export const postComment = async (comment, retailer, id) => {
   );
   return response;
 };
+
 
 export const getAnnounce = async () => {
   const response = await axios.get(`/api/announcement`);
