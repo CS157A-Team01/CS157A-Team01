@@ -74,6 +74,7 @@ class Comments extends Component {
         .catch(err => console.log(err.response));
     }
   }
+
   render() {
     const rows = [];
     for (let i = 0; i < this.state.comment.length; i++) {
@@ -116,12 +117,14 @@ class Comments extends Component {
                   <th>Title</th>
                   <th>Price</th>
                   <th>Desired Price</th>
+                  <th>New Desired Price</th>
                   <th>Update</th>
                 </tr>
                 <tr>
                   <td>{this.state.product.retailer}</td>
                   <td>{this.state.product.title}</td>
                   <td>{this.state.product.price}</td>
+                  <td>{this.state.product.desired_price}</td>
                   <td>
                     <div class="form-group row">
                       <div class="col-xs-1">

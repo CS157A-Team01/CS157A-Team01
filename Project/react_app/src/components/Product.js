@@ -52,11 +52,15 @@ class Product extends Component {
               {p.title}
             </a>
           </td>
-          <td className="text-center">{p.price}</td>
+          <td className="text-center">
+            <font color="green">{p.price}</font>
+          </td>
           <td>
             <a href={p.url}>{p.url}</a>
           </td>
-          <td className="text-center">{p.desired_price}</td>
+          <td className="text-center">
+            <font color="red">{p.desired_price}</font>
+          </td>
           <th className="text-center">
             <form onSubmit={this.onSubmit}>
               <button

@@ -73,15 +73,13 @@ export const getProduct = async () => {
 };
 
 export const deleteProduct = async (retailer, product_id) => {
-  const response = await axios.delete(
-    "/api/product",
-    {
-      headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
-      data: {
-        retailer: retailer,
-        product_id: product_id
-      }
-    });
+  const response = await axios.delete("/api/product", {
+    headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
+    data: {
+      retailer: retailer,
+      product_id: product_id
+    }
+  });
   return response;
 };
 
@@ -91,7 +89,10 @@ export const getComment = async (retailer, id) => {
 };
 
 export const getCurrentProduct = async (retailer, id) => {
-  const response = await axios.get(`/api/product/${retailer}/${id}`);
+  const response = await axios.get(`/api/product/${retailer}/${id}`, {
+    headers: { "X-CSRF-TOKEN": `${cookie.get("csrf_access_token")}` },
+    withCredentials: true
+  });
   return await response.data;
 };
 
@@ -110,7 +111,6 @@ export const postComment = async (comment, retailer, id) => {
   );
   return response;
 };
-
 
 export const getAnnounce = async () => {
   const response = await axios.get(`/api/announcement`);
