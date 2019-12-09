@@ -11,6 +11,29 @@ product_parser.add_argument(
     "url", help="url field required", required=True)
 
 
+class GetSpecificProduct(Resource):
+
+    def get(self, retailer, pid):
+        cursor = mysql.get_db().cursor()
+        sql = '''
+        SELECT * FROM product
+        WHERE retailer=%s AND product_id=%s
+        '''
+        cursor.execute(sql, (retailer, pid))
+        result = cursor.fetchone()
+        if not result:
+            return {'message': 'Product not found'}, 400
+
+        name, url, price, prod_id, retail = result
+        return {
+            'title': name,
+            'url': url,
+            'price': price,
+            'retailer': retail,
+            'id': prod_id
+        }
+
+
 class TrackProduct(Resource):
     update_parser = reqparse.RequestParser()
     update_parser.add_argument('retailer', required=True,

@@ -35,7 +35,8 @@ def create_app(config=None):
                                           TokenRefresh, UnsetToken,
                                           AdminLogin, AdminRegister)
     from resources.user import GetUserInfo, UpdateUserInfo
-    from resources.products import TrackProduct, NewComments, GetComments
+    from resources.products import (TrackProduct, NewComments, GetComments,
+                                    GetSpecificProduct)
     from resources.admin import Announcement
 
     api.add_resource(UserRegistration, '/register')
@@ -45,8 +46,11 @@ def create_app(config=None):
     api.add_resource(GetUserInfo, '/user')
     api.add_resource(UpdateUserInfo, '/user/<string:option>')
     api.add_resource(TrackProduct, '/product')
+    api.add_resource(GetSpecificProduct,
+                     '/product/<string:retailer>/<string:pid>')
     api.add_resource(NewComments, '/comment')
-    api.add_resource(GetComments, '/comment/<string:retailer>/<string:prod_id>')
+    api.add_resource(GetComments,
+                     '/comment/<string:retailer>/<string:prod_id>')
     api.add_resource(AdminLogin, '/admin-login')
     api.add_resource(AdminRegister, '/admin-register')
     api.add_resource(Announcement, '/announcement')

@@ -17,6 +17,7 @@ Open endpoints require no Authentication.
 * [Revoke tokens (logout)](revoke_access.md) : `DELETE /api/revoke`
 * [Get comments](get_comments.md) `GET /api/comment/<retailer>/<product id>`
 * [Get announcement](get_announcement.md) : `GET /api/announcement`
+* [Get Specific Product](get_single_product.md) : `GET /api/product/<retailer>/<id>`
 
 ## Endpoints that require Authentication
 
