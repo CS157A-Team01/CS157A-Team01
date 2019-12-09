@@ -12,25 +12,31 @@ product_parser.add_argument(
 
 
 class GetSpecificProduct(Resource):
-
+    @jwt_required
     def get(self, retailer, pid):
+        cur_user = get_jwt_identity()
         cursor = mysql.get_db().cursor()
         sql = '''
-        SELECT * FROM product
-        WHERE retailer=%s AND product_id=%s
+        SELECT name, url, price, product.product_id, product.retailer, 
+        desired_price FROM 
+        product JOIN product_tracked_by_user ptbu ON 
+        product.product_id = ptbu.product_id AND product.retailer = 
+        ptbu.retailer
+        WHERE ptbu.retailer=%s AND ptbu.product_id=%s AND user_id = %s
         '''
-        cursor.execute(sql, (retailer, pid))
+        cursor.execute(sql, (retailer, pid, cur_user))
         result = cursor.fetchone()
         if not result:
             return {'message': 'Product not found'}, 400
 
-        name, url, price, prod_id, retail = result
+        name, url, price, prod_id, retail, desired = result
         return {
             'title': name,
             'url': url,
             'price': price,
             'retailer': retail,
-            'id': prod_id
+            'id': prod_id,
+            'desired_price': desired
         }
 
 

@@ -8,7 +8,7 @@ get information for a specific product
 
 **Method** : `GET`
 
-**Auth required** : NO
+**Auth required** : YES
 
 
 ## Success Response
