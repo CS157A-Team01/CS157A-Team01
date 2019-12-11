@@ -111,7 +111,7 @@ class UpdateProfile extends Component {
               <button
                 type="submit"
                 className="btn btn-lg btn-primary btn-block"
-                onClick="/dashboard"
+                onClick="location.href='/dashboard'"
               >
                 Update
               </button>

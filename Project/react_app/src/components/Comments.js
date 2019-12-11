@@ -113,19 +113,21 @@ class Comments extends Component {
             <table>
               <TableBody>
                 <tr>
-                  <th>Retailer</th>
-                  <th>Title</th>
-                  <th>Price</th>
-                  <th>Desired Price</th>
-                  <th>New Desired Price</th>
-                  <th>Update</th>
+                  <th className="text-center">Retailer</th>
+                  <th className="text-center">Title</th>
+                  <th className="text-center">Price</th>
+                  <th className="text-center">Desired Price</th>
+                  <th className="text-center">New Desired Price</th>
+                  <th className="text-center">Update</th>
                 </tr>
                 <tr>
-                  <td>{this.state.product.retailer}</td>
-                  <td>{this.state.product.title}</td>
-                  <td>{this.state.product.price}</td>
-                  <td>{this.state.product.desired_price}</td>
-                  <td>
+                  <td className="text-center">{this.state.product.retailer}</td>
+                  <td className="text-center">{this.state.product.title}</td>
+                  <td className="text-center">{this.state.product.price}</td>
+                  <td className="text-center">
+                    {this.state.product.desired_price}
+                  </td>
+                  <td className="text-center">
                     <div class="form-group row">
                       <div class="col-xs-1">
                         <input
@@ -138,7 +140,7 @@ class Comments extends Component {
                       </div>
                     </div>
                   </td>
-                  <td>
+                  <td className="text-center">
                     <button
                       className="btn btn-danger"
                       onClick={this.handleUpdate}
